@@ -14,11 +14,17 @@
 /***************************/
 
 
+$site_folder_name = 'lsnc/pika';
+
+
 define('LSNC_API_NAME','LSNC Google Apps API');
 define('LSNC_API_VERSION','1');
 define('LSNC_API_REVISION','0');
 
-chdir('../');
+$path = '../../' . $site_folder_name;
+chdir($path);
+
+
 $include_str = './app/lib' . PATH_SEPARATOR . './app/extralib' . PATH_SEPARATOR . ini_get('include_path');
 ini_set('include_path', $include_str);
 
@@ -99,9 +105,9 @@ else {
 }
 */
 
-$api_str = str_replace($_SERVER['SCRIPT_NAME'], "", $_SERVER['PHP_SELF']); 
-$api_str = str_replace('..', '', $api_str);
-$api_request = explode('/', $api_str);
+$api_request = explode('/', $_SERVER['REQUEST_URI']);
+array_shift($api_request);
+array_shift($api_request);
 array_shift($api_request);
 
 switch($api_request[0]) 

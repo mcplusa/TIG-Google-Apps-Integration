@@ -14,7 +14,7 @@
 /***************************/
 
 
-$site_folder_name = 'lsnc/pika';
+$site_folder_name = 'cms';
 
 
 define('LSNC_API_NAME','LSNC Google Apps API');

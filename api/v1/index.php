@@ -137,6 +137,62 @@ if (!function_exists('http_response_code'))
     }
 }
 
+
+/**
+* Base class for processing REST requests.
+*/
+class restResource 
+{
+	private $table = 'cases';
+	private $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, status as case_status FROM cases WHERE case_id=";
+	
+	function post($id)
+	{
+		http_response_code(400);  // BAD REQUEST
+		return;
+	}
+
+	function get($id)
+	{
+		$clean_id = mysql_real_escape_string($id);
+		$sql = $get_sql . $clean_id;
+		$result = mysql_query($sql);
+		
+		if (mysql_num_rows($result) == 0)
+		{
+			http_response_code(404);  // NOT FOUND
+		}
+		
+		else if (mysql_num_rows($result) > 1)
+		{
+			http_response_code(500);  // INTERNAL SERVER ERROR
+		}
+		
+		else 
+		{
+			$row = mysql_fetch_assoc($result);
+			header_send ();
+			echo "[" . json_encode($row) . "]";
+		}
+		
+		return;
+	}
+
+	function put($id)
+	{
+		http_response_code(500);  // Server Error; placeholder
+		// If exists, update case; if not, error				
+		return;		
+	}
+
+	function delete($id)
+	{
+		http_response_code(405);  // NOT ALLOWED
+		break;
+	}
+}
+
+
 //mysql_connect(DB_HOST,DB_USER,DB_PASS);
 //mysql_select_db(DB_NAME);
 

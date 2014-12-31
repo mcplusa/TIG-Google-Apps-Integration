@@ -13,19 +13,8 @@
 /* http://pikasoftware.com */
 /***************************/
 
-/*
-	Currently, this application needs to be installed in a 
-	directory named /api/v1/ off of the root web directory.  It 
-	only connects to one database, so each server can only make 
-	one site available via the API.
-	
-	In the future, I'd like to enable support for multiple sites
-	per server.
 
-	Another project goals is to add a data storage abstraction layer to 
-	allow other systems to more easily plug in.
-	
-	*/
+// Config variables	
 $site_folder_name = 'pika_cms/cms';
 $time_zone = 'America/New_York';
 $db_host = 'localhost';
@@ -33,10 +22,14 @@ $db_name = 'pika';
 $db_user = 'root';
 $db_password = '';
 
+
+// Definitions
 define('LSNC_API_NAME','LSNC Google Apps API');
 define('LSNC_API_VERSION','1');
 define('LSNC_API_REVISION','0');
 
+
+// Application initialization
 $status = mysql_connect($db_host, $db_user, $db_password);
 
 if ($status !== false)
@@ -58,6 +51,8 @@ if (function_exists('date_default_timezone_set'))
 	date_default_timezone_set($time_zone);
 }
 
+
+// Functions
 function header_send()
 {
 	header("Cache-Control:  no-cache");
@@ -181,6 +176,8 @@ if (!function_exists('http_response_code'))
     }
 }
 
+
+// Classes
 
 /**
 * Base class for processing REST requests.
@@ -420,6 +417,9 @@ else {
 	}
 }
 */
+
+
+// Main code
 
 $api_request = explode('/', $_SERVER['REQUEST_URI']);
 array_shift($api_request);  //  Remove '/'

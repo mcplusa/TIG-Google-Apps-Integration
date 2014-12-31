@@ -17,6 +17,34 @@
 // Config variables	
 $site_folder_name = 'pika_cms/cms';
 $time_zone = 'America/New_York';
+$http_user = 'api';
+$http_password = 'na5us+wr';
+
+
+// Definitions
+define('LSNC_API_NAME','LSNC Google Apps API');
+define('LSNC_API_VERSION','1');
+define('LSNC_API_REVISION','0');
+
+
+// Authentication
+if (!isset($_SERVER['PHP_AUTH_USER'])) 
+{
+    header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
+    header('HTTP/1.0 401 Unauthorized');
+    echo 'HTTP/1.0 401 Unauthorized';
+    exit;
+}
+
+else 
+{
+	if($_SERVER['PHP_AUTH_USER'] != $http_user || $_SERVER['PHP_AUTH_PW'] != $http_password)
+	{
+		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
+		header('HTTP/1.0 401 Unauthorized');
+		exit();
+	}
+}
 
 
 // Database variables
@@ -26,12 +54,6 @@ $db_host = $plSettings['db_host'];
 $db_name = $plSettings['db_name'];
 $db_user = $plSettings['db_user'];
 $db_password = $plSettings['db_password'];
-
-
-// Definitions
-define('LSNC_API_NAME','LSNC Google Apps API');
-define('LSNC_API_VERSION','1');
-define('LSNC_API_REVISION','0');
 
 
 // Application initialization
@@ -390,37 +412,6 @@ class restCaseNote extends restResource
 
 //mysql_connect(DB_HOST,DB_USER,DB_PASS);
 //mysql_select_db(DB_NAME);
-
-/*
-if (!isset($_SERVER['PHP_AUTH_USER'])) 
-{
-    header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'HTTP/1.0 401 Unauthorized';
-    exit;
-} 
-else {
-   	$safe_password_md5 = mysql_real_escape_string(md5($_SERVER['PHP_AUTH_PW']));
-   	$safe_username = mysql_real_escape_string($_SERVER['PHP_AUTH_USER']);
-	$sql = "SELECT organizations.* 
-			FROM organizations 
-			WHERE 1 
-			AND username='{$safe_username}' 
-			AND password='{$safe_password_md5}' 
-			LIMIT 1";
-	$result = mysql_query($sql);
-	if(mysql_num_rows($result) != 1)
-	{
-		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
-		header('HTTP/1.0 401 Unauthorized');
-		exit();
-	}
-	else
-	{
-		$auth_row = mysql_fetch_assoc($result);
-	}
-}
-*/
 
 
 // Main code

@@ -17,10 +17,15 @@
 // Config variables	
 $site_folder_name = 'pika_cms/cms';
 $time_zone = 'America/New_York';
-$db_host = 'localhost';
-$db_name = 'pika';
-$db_user = 'root';
-$db_password = '';
+
+
+// Database variables
+$plSettings = array();
+include('../../' . $site_folder_name . '-custom/config/settings.php');
+$db_host = $plSettings['db_host'];
+$db_name = $plSettings['db_name'];
+$db_user = $plSettings['db_user'];
+$db_password = $plSettings['db_password'];
 
 
 // Definitions
@@ -231,7 +236,6 @@ class restResource
 		$sql .= $this->id . ", " . $this->post_values();
 		$sql .= ")";
 		
-		//echo $sql; exit();
 		$result = mysql_query($sql) or server_error(mysql_error($result));
 		
 		$this->transmitJson();

@@ -13,62 +13,106 @@
 /* http://pikasoftware.com */
 /***************************/
 
+/*
+	Currently, this application needs to be installed in a 
+	directory named /api/v1/ off of the root web directory.  It 
+	only connects to one database, so each server can only make 
+	one site available via the API.
+	
+	In the future, I'd like to enable support for multiple sites
+	per server.
 
+	Another project goals is to add a data storage abstraction layer to 
+	allow other systems to more easily plug in.
+	
+	*/
 $site_folder_name = 'pika_cms/cms';
-
+$time_zone = 'America/New_York';
+$db_host = 'localhost';
+$db_name = 'pika';
+$db_user = 'root';
+$db_password = '';
 
 define('LSNC_API_NAME','LSNC Google Apps API');
 define('LSNC_API_VERSION','1');
 define('LSNC_API_REVISION','0');
 
-$path = '../../' . $site_folder_name;
-chdir($path);
+$status = mysql_connect($db_host, $db_user, $db_password);
 
+if ($status !== false)
+{
+	$connection_is_live = mysql_select_db($db_name) or trigger_error(mysql_error());
+	mysql_query("SET SESSION query_cache_type = DEMAND") or trigger_error(mysql_error());
+}
 
-$include_str = './app/lib' . PATH_SEPARATOR . './app/extralib' . PATH_SEPARATOR . ini_get('include_path');
-ini_set('include_path', $include_str);
-
-require_once('pl.php');
-
-pl_mysql_init();
 set_time_limit(0);
 ini_set('memory_limit','999M');
 
-if(function_exists('date_default_timezone_set')) 
+if (function_exists('date_default_timezone_set')) 
 {
-	$time_zone = pl_settings_get('time_zone');
-	
 	if (!$time_zone) 
 	{
-		$time_zone='America/New_York';
+		$time_zone = 'America/New_York';
 	}
 	
 	date_default_timezone_set($time_zone);
 }
 
-function header_send ()
+function header_send()
 {
 	header("Cache-Control:  no-cache");
 	header("Content-Type:  application/json; charset=UTF-8");
 	header("Expires:  Fri, 01 Jan 1990 00:00:00 GMT");
 }
 
-
-function pl_grab_req($var_name = null,$default_value = null)
+function server_error($message)
 {
-	$request = array();
-	switch ($_SERVER['REQUEST_METHOD'])
+	http_response_code(500);
+	echo json_encode(array($message));
+	exit();
+}
+
+function post_value($field)
+{
+	if (array_key_exists($field, $_POST))
 	{
-		case 'GET':
-			$request = $_GET;
-			break;
-		case 'POST':
-		case 'PUT':
-			parse_str(file_get_contents('php://input'),$request);
-			break;
+		return "'" . mysql_real_escape_string($_POST[$field]) . "'";
 	}
-	$value = isset($request[$var_name]) ? $request[$var_name] : $default_value;
-	return $value;
+	
+	else
+	{
+		return "NULL";
+	}		
+}
+
+function next_id($sequence)
+{
+	// VARIABLES
+	$safe_sequence = mysql_escape_string($sequence);
+	$next_id = null;
+	
+	mysql_query("LOCK TABLES counters WRITE") or trigger_error('counters table lock failed');
+	$result = mysql_query("SELECT count FROM counters WHERE id = '{$safe_sequence}' LIMIT 1")
+		or trigger_error('');
+	
+	if (mysql_num_rows($result) < 1)
+	{
+		mysql_query("INSERT INTO counters SET id = '{$safe_sequence}', count = '1'")
+		or trigger_error('');
+		$next_id = 1;
+	}
+	
+	else
+	{
+		$row = mysql_fetch_assoc($result);
+		$next_id = $row['count'] + 1;
+		
+		mysql_query("UPDATE counters SET count = count + '1' WHERE id = '{$safe_sequence}' LIMIT 1")
+			or trigger_error('error_during_increment');
+	}
+	
+	mysql_query("UNLOCK TABLES") or trigger_error('error');
+	return $next_id;
 }
 
 // From http://php.net/manual/en/function.http-response-code.php
@@ -143,20 +187,22 @@ if (!function_exists('http_response_code'))
 */
 class restResource 
 {
-	private $table = 'cases';
-	private $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, status as case_status FROM cases WHERE case_id=";
+	protected $table = 'db_table';
+	protected $get_sql = "SELECT columns FROM db_table WHERE case_id=";
+	//protected $count_sql = "SELECT COUNT(*) AS row_count FROM db_table WHERE id=";
+	protected $data_fields = 'id, a, b, c';
+	protected $id = null;
 	
-	function post($id)
+	function __construct($id = null)
 	{
-		http_response_code(400);  // BAD REQUEST
-		return;
+		$this->id = $id;
 	}
-
-	function get($id)
+	
+	function transmitJson()
 	{
-		$clean_id = mysql_real_escape_string($id);
-		$sql = $get_sql . $clean_id;
-		$result = mysql_query($sql);
+		$clean_id = mysql_real_escape_string($this->id);
+		$sql = $this->get_sql . $clean_id;
+		$result = mysql_query($sql) or server_error(mysql_error($result));
 		
 		if (mysql_num_rows($result) == 0)
 		{
@@ -165,32 +211,180 @@ class restResource
 		
 		else if (mysql_num_rows($result) > 1)
 		{
-			http_response_code(500);  // INTERNAL SERVER ERROR
+			server_error(mysql_error($result));  // INTERNAL SERVER ERROR
 		}
 		
 		else 
 		{
 			$row = mysql_fetch_assoc($result);
-			header_send ();
+			header_send();
 			echo "[" . json_encode($row) . "]";
-		}
+		}		
+	}
+	
+	function post_values()
+	{
+		return '';
+	}
+	
+	function post()
+	{
+		$this->id = next_id($this->table);
+		$sql = "INSERT INTO {$this->table} ({$this->data_fields}) VALUES (";
+		$sql .= $this->id . ", " . $this->post_values();
+		$sql .= ")";
+		
+		//echo $sql; exit();
+		$result = mysql_query($sql) or server_error(mysql_error($result));
+		
+		$this->transmitJson();
 		
 		return;
 	}
 
-	function put($id)
+	function get()
+	{
+		$this->transmitJson();
+		
+		return;
+	}
+
+	function put()
 	{
 		http_response_code(500);  // Server Error; placeholder
-		// If exists, update case; if not, error				
+		// If exists, update case; if not, error
+		
+		/*
+		$clean_id = mysql_real_escape_string($this->id);
+		$sql = $this->count_sql . $clean_id;
+		$result = mysql_query($sql) or http_response_code(500);
+		$row = mysql_fetch_assoc($result);
+		
+		if ($row['row_count'] == 1)
+		{
+			$sql = "UPDATE {$this->table} SET ";
+			$z = array();
+			
+			foreach ($this->data_fields as $key => $value)
+			{
+				$z[] = null;
+			}
+			
+		}
+		
+		return;
+		*/
+	}
+
+	function delete()
+	{
+		http_response_code(405);  // NOT ALLOWED
+		return;
+	}
+}
+
+
+/**
+* REST resource that returns a JSON list.
+*/
+class restResourceList extends restResource 
+{
+	protected $get_sql = "SELECT columns FROM db_table";
+	
+	function post()
+	{
+		http_response_code(500);  // Server Error; placeholder
+		// Create new case.				
 		return;		
 	}
 
-	function delete($id)
+	function get()
+	{
+		$result = mysql_query($this->get_sql);
+		$a = array();
+		
+		while (	$row = mysql_fetch_assoc($result))
+		{
+			$a[] = $row;
+		}
+		
+		header_send ();
+		echo json_encode($a);
+		return;
+	}
+	
+	function put()
 	{
 		http_response_code(405);  // NOT ALLOWED
-		break;
+		return;		
 	}
 }
+
+
+
+/**
+* Request for a list of cases.
+*/
+class restCaseList extends restResourceList 
+{
+	protected $table = 'cases';
+	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, status as case_status FROM cases";
+}
+
+
+/**
+* Request for a single case.
+*/
+class restCase extends restResource 
+{
+	protected $table = 'cases';
+	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, status as case_status FROM cases WHERE case_id=";
+	protected $data_fields = 'case_id, number, status';
+
+	function post_values()
+	{
+		$x = post_value('case_number') . ', 1';
+		
+		return $x;
+	}
+}
+
+
+/**
+* Request for a list of case notes.
+*/
+class restCaseNoteList extends restResourceList 
+{
+	protected $table = 'activities';
+	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, notes FROM activities WHERE case_id IS NOT NULL LIMIT 1000";
+}
+
+
+/**
+* Request for a single case note.
+*/
+class restCaseNote extends restResource 
+{
+	protected $table = 'activities';
+	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, notes, hours, funding AS funding_source FROM activities WHERE act_id=";
+	protected $data_fields = 'act_id, case_id, summary, notes, hours, created, act_date, category, user_id, funding';
+	
+	function post_values()
+	{
+		$x = post_value('case_id') . ',';
+		$x .= post_value('summary') . ',';
+		$x .= post_value('notes') . ',';
+		$x .= post_value('hours') . ',';
+		$x .= post_value('created') . ',';
+		$x .= post_value('act_date') . ',';
+		$x .= post_value('category') . ',';
+		$x .= post_value('user_id') . ',';
+		$x .= post_value('funding');
+		
+		return $x;
+	}
+}
+
 
 
 //mysql_connect(DB_HOST,DB_USER,DB_PASS);
@@ -228,9 +422,9 @@ else {
 */
 
 $api_request = explode('/', $_SERVER['REQUEST_URI']);
-array_shift($api_request);
-array_shift($api_request);
-array_shift($api_request);
+array_shift($api_request);  //  Remove '/'
+array_shift($api_request);  //  Remove 'api/'
+array_shift($api_request);  //  Remove 'v1/'
 
 /*	If the URL has a trailing '/', an empty element will be tacked on the end of the $api_request
 	array.  Clean this up with the following code.
@@ -239,6 +433,190 @@ if ('' == $api_request[sizeof($api_request) - 1])
 {
 	array_pop($api_request);
 }
+
+/*
+if (sizeof($api_request) == 1)
+{
+	switch($api_request[0]) 
+	{
+		case 'cases':
+			
+			$rest = new restCaseList();
+			break;
+		
+		case 'casenotes':
+			$rest = new restCaseNote();
+			break;
+		
+		default:
+			http_response_code(404);  // NOT FOUND
+			break;
+	}
+}
+
+else if (sizeof($api_request) == 2)
+{
+	switch($api_request[0]) 
+	{
+		case 'cases':
+			$rest = new restCase($api_request[1]);
+			break;
+		
+		case 'casenotes':
+			$rest = new restCaseNote($api_request[1]);
+			break;
+		
+		default:
+			http_response_code(404);  // NOT FOUND
+			break;
+	}
+	
+}
+
+else
+{
+	http_response_code(400);  // BAD REQUEST
+}
+
+switch ($_SERVER['REQUEST_METHOD'])
+{
+	case 'POST':
+		$rest->post();
+		break;
+		
+	case 'GET':
+		$rest->get();
+		break;
+		
+	case 'PUT':
+		$rest->put();
+		break;
+	
+	case 'DELETE':
+		$rest->delete();
+		break;
+	
+	default:
+		http_response_code(400);  // BAD REQUEST
+		break;
+}
+*/
+
+if ('cases' == $api_request[0])
+{
+	if (sizeof($api_request) == 1)
+	{
+		switch ($_SERVER['REQUEST_METHOD'])
+		{
+			case 'POST':
+				$rest = new restCase();
+				$rest->post();
+				break;
+				
+			case 'GET':
+				$rest = new restCaseList();
+				$rest->get();
+				break;
+
+			default:
+				http_response_code(400);  // BAD REQUEST
+				break;
+		}
+	}
+	
+	else if (sizeof($api_request) == 2)
+	{
+		switch ($_SERVER['REQUEST_METHOD'])
+		{
+			case 'POST':
+				http_response_code(400);  // BAD REQUEST
+				break;
+				
+			case 'GET':
+				$rest = new restCase($api_request[1]);
+				$rest->get();
+				break;
+				
+			case 'PUT':
+				$rest = new restCase($api_request[1]);
+				$rest->put();
+				break;
+			
+			default:
+				http_response_code(400);  // BAD REQUEST
+				break;
+		}
+	}
+
+	else
+	{
+		http_response_code(400);  // BAD REQUEST
+	}
+}
+
+else if ('casenotes' == $api_request[0])
+{
+	if (sizeof($api_request) == 1)
+	{
+		switch ($_SERVER['REQUEST_METHOD'])
+		{
+			case 'POST':
+				$rest = new restCaseNote();
+				$rest->post();
+				break;
+				
+			case 'GET':
+				$rest = new restCaseNoteList();
+				$rest->get();
+				break;
+
+			default:
+				http_response_code(400);  // BAD REQUEST
+				break;
+		}
+	}
+	
+	else if (sizeof($api_request) == 2)
+	{
+		switch ($_SERVER['REQUEST_METHOD'])
+		{
+			case 'POST':
+				http_response_code(400);  // BAD REQUEST
+				break;
+				
+			case 'GET':
+				$rest = new restCaseNote($api_request[1]);
+				$rest->get();
+				break;
+				
+			case 'PUT':
+				$rest = new restCaseNote($api_request[1]);
+				$rest->put();
+				break;
+			
+			case 'DELETE':
+				$rest = new restCaseNote($api_request[1]);
+				$rest->delete();
+				break;
+			
+			default:
+				http_response_code(400);  // BAD REQUEST
+				break;
+		}
+	}
+
+	else
+	{
+		http_response_code(400);  // BAD REQUEST
+	}
+}
+
+else
+{
+	http_response_code(400);  // BAD REQUEST
+}
+
+exit();
 
 
 switch($api_request[0]) 
@@ -265,7 +643,7 @@ switch($api_request[0])
 					
 					else if (mysql_num_rows($result) > 1)
 					{
-						http_response_code(500);  // INTERNAL SERVER ERROR
+						server_error(mysql_error($result));  // INTERNAL SERVER ERROR
 					}
 					
 					else 
@@ -351,7 +729,7 @@ switch($api_request[0])
 					
 					else if (mysql_num_rows($result) > 1)
 					{
-						http_response_code(500);  // SERVER ERROR;
+						server_error(mysql_error($result));  // SERVER ERROR;
 						break;
 					}
 	

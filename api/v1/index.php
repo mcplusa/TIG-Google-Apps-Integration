@@ -14,8 +14,8 @@
 /***************************/
 
 
-// Config variables	
-$site_folder_name = 'pika_cms/cms';
+// Config variables 
+$site_folder_name = 'cms';
 $time_zone = 'America/New_York';
 $http_user = 'api';
 $http_password = 'na5us+wr';
@@ -30,9 +30,13 @@ define('LSNC_API_REVISION','0');
 // Authentication
 if (!isset($_SERVER['PHP_AUTH_USER'])) 
 {
+    header('Access-Control-Allow-Origin: https://mail.google.com');
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Allow-Headers: accept, authorization');
+    header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
     header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'HTTP/1.0 401 Unauthorized';
+    header('HTTP/1.0 204 No Content');
+    echo 'HTTP/1.0 204 No Content';
     exit;
 }
 
@@ -82,9 +86,10 @@ if (function_exists('date_default_timezone_set'))
 // Functions
 function header_send()
 {
-	header("Cache-Control:  no-cache");
-	header("Content-Type:  application/json; charset=UTF-8");
-	header("Expires:  Fri, 01 Jan 1990 00:00:00 GMT");
+    header("Access-Control-Allow-Origin: https://mail.google.com");
+    header("Cache-Control:  no-cache");
+    header("Content-Type:  application/json; charset=UTF-8");
+    header("Expires:  Fri, 01 Jan 1990 00:00:00 GMT");
 }
 
 function server_error($message)

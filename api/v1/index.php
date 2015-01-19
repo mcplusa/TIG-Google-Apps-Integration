@@ -107,6 +107,35 @@ function post_value($field)
 	}		
 }
 
+function get_value($field)
+{
+	if (isset($_GET[$field]))
+	{
+		return mysql_real_escape_string($_GET[$field]);
+	}
+	
+	else return null;
+}
+
+function get_value_numeric($field)
+{
+	if (isset($_GET[$field]))
+	{
+		if (is_numeric($_GET[$field]))
+		{
+			return mysql_real_escape_string($_GET[$field]);
+		}
+		
+		else
+		{
+			http_response_code(400);
+			exit();
+		}
+	}
+	
+	else return null;
+}
+
 function next_id($sequence)
 {
 	// VARIABLES
@@ -231,6 +260,7 @@ class restResource
 		if (mysql_num_rows($result) == 0)
 		{
 			http_response_code(404);  // NOT FOUND
+			exit();
 		}
 		
 		else if (mysql_num_rows($result) > 1)
@@ -321,9 +351,27 @@ class restResourceList extends restResource
 		return;		
 	}
 
-	function get()
+	function get($extra_sql = '')
 	{
-		$result = mysql_query($this->get_sql);
+		$safe_limit = 10;
+		$safe_offset = 0;
+		
+		$tmp_offset = get_value_numeric('offset');
+		
+		if ($tmp_offset)
+		{
+			$safe_offset = $tmp_offset;
+		}
+		
+		$tmp_limit = get_value_numeric('limit');
+		
+		if ($tmp_limit)
+		{
+			$safe_limit = $tmp_limit;		
+		}
+
+		$sql = $this->get_sql . " {$extra_sql} LIMIT {$safe_offset}, {$safe_limit}";
+		$result = mysql_query($sql);
 		$a = array();
 		
 		while (	$row = mysql_fetch_assoc($result))
@@ -352,6 +400,19 @@ class restCaseList extends restResourceList
 {
 	protected $table = 'cases';
 	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, status as case_status FROM cases";
+	
+	function get()
+	{
+		$extra_sql = '';
+		$safe_q = get_value('q');
+		
+		if ($safe_q)
+		{
+			$extra_sql = "WHERE number LIKE '%{$safe_q}%'";
+		}
+
+		parent::get($extra_sql);
+	}
 }
 
 
@@ -379,7 +440,20 @@ class restCase extends restResource
 class restCaseNoteList extends restResourceList 
 {
 	protected $table = 'activities';
-	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, notes FROM activities WHERE case_id IS NOT NULL LIMIT 1000";
+	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, notes FROM activities WHERE case_id IS NOT NULL";
+	
+	function get()
+	{
+		$extra_sql = '';
+		$safe_case_id = get_value_numeric('case_id');
+		
+		if ($safe_case_id)
+		{
+			$extra_sql = "AND case_id = {$safe_case_id}";
+		}
+		
+		parent::get($extra_sql);
+	}
 }
 
 
@@ -415,12 +489,21 @@ class restCaseNote extends restResource
 
 
 // Main code
+$question_position = strpos($_SERVER['REQUEST_URI'], '?');
+if ($question_position)
+{
+	$uri = substr($_SERVER['REQUEST_URI'], 0, $question_position);
+}
 
-$api_request = explode('/', $_SERVER['REQUEST_URI']);
+else
+{
+	$uri = $_SERVER['REQUEST_URI'];
+}
+
+$api_request = explode('/', $uri);
 array_shift($api_request);  //  Remove '/'
 array_shift($api_request);  //  Remove 'api/'
 array_shift($api_request);  //  Remove 'v1/'
-
 /*	If the URL has a trailing '/', an empty element will be tacked on the end of the $api_request
 	array.  Clean this up with the following code.
 */

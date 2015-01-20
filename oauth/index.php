@@ -16,9 +16,9 @@
 		$consumer = Provider::createConsumer();
 		?>
 		<h1>New consumer</h1>
-		<strong>Key : </strong> <?php echo $consumer->getKey()?><br />
-		<strong>Secret : </strong> <?php echo $consumer->getSecretKey()?>
-		<?
+		<strong>Key : </strong> <?php echo $consumer->getKey() ?><br />
+		<strong>Secret : </strong> <?php echo $consumer->getSecretKey() ?>
+		<?php 
 	} else if(strstr($_SERVER['REQUEST_URI'],"api/user")){
 		/* this is a basic api call that will return the id of an authenticated user */
 		$provider->checkRequest();

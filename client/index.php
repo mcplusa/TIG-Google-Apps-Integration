@@ -1,8 +1,17 @@
 <?php
-	$oauth_client = new Oauth("key","secret");
+	$a = array();
+	$a['oauth_token'] = null;
+	$a['oauth_token_secret'] = null;
+	$a['authentification_url'] = null;
+	
+	$oauth_client = new Oauth("test","password");
 	$oauth_client->enableDebug();
 	try {
 		$info = $oauth_client->getRequestToken("http://localhost/OAuthProviderExample/oauth/request_token?oauth_callback=http://localhost/OAuthProviderExample/client/callback.php");
+		
+		// Merge in the dummy values, to surpress missing index warnings.
+		$info = array_merge($a, $info);
+		
 		echo "<h1>We have a request token !</h1>";
 		echo "<strong>Request token</strong> : ".$info['oauth_token']."<br />";
 		echo "<strong>Request token secret</strong> : ".$info['oauth_token_secret']."<br />";

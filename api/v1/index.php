@@ -104,6 +104,11 @@ function post_value($field)
 	$json = file_get_contents('php://input');
 	$v = json_decode($json, TRUE);
 	
+	if (!is_array($v))
+	{
+		server_error("Invalid JSON input.");
+	}
+	
 	if (array_key_exists($field, $v))
 	{
 		return "'" . mysql_real_escape_string($v[$field]) . "'";

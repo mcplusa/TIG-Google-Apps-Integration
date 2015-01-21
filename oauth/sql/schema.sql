@@ -19,7 +19,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Structure de la table `consumer`
 --
 
-CREATE TABLE IF NOT EXISTS `consumer` (
+CREATE TABLE IF NOT EXISTS `oauth_consumer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `consumer_key` varchar(255) NOT NULL,
   `consumer_secret` varchar(255) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `consumer` (
 -- Contenu de la table `consumer`
 --
 
-INSERT INTO `consumer` (`id`, `consumer_key`, `consumer_secret`, `active`) VALUES
+INSERT INTO `oauth_consumer` (`id`, `consumer_key`, `consumer_secret`, `active`) VALUES
 (1, 'key', 'secret', 1);
 
 -- --------------------------------------------------------
@@ -40,7 +40,7 @@ INSERT INTO `consumer` (`id`, `consumer_key`, `consumer_secret`, `active`) VALUE
 -- Structure de la table `consumer_nonce`
 --
 
-CREATE TABLE IF NOT EXISTS `consumer_nonce` (
+CREATE TABLE IF NOT EXISTS `oauth_consumer_nonce` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `consumer_id` int(11) NOT NULL,
   `timestamp` bigint(20) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `consumer_nonce` (
 -- Structure de la table `token`
 --
 
-CREATE TABLE IF NOT EXISTS `token` (
+CREATE TABLE IF NOT EXISTS `oauth_token` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` int(11) NOT NULL,
   `consumer_id` int(11) NOT NULL,
@@ -86,19 +86,19 @@ CREATE TABLE IF NOT EXISTS `token` (
 -- Structure de la table `token_type`
 --
 
-CREATE TABLE IF NOT EXISTS `token_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+--CREATE TABLE IF NOT EXISTS `oauth_token_type` (
+--  `id` int(11) NOT NULL AUTO_INCREMENT,
+--  `type` varchar(50) NOT NULL,
+--  PRIMARY KEY (`id`)
+--) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `token_type`
 --
 
-INSERT INTO `token_type` (`id`, `type`) VALUES
-(1, 'request'),
-(2, 'access');
+--INSERT INTO `oauth_token_type` (`id`, `type`) VALUES
+--(1, 'request'),
+--(2, 'access');
 
 -- --------------------------------------------------------
 
@@ -106,18 +106,18 @@ INSERT INTO `token_type` (`id`, `type`) VALUES
 -- Structure de la table `user`
 --
 
-CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `login` varchar(20) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+--CREATE TABLE IF NOT EXISTS `user` (
+--  `id` int(11) NOT NULL AUTO_INCREMENT,
+--  `login` varchar(20) NOT NULL,
+--  PRIMARY KEY (`id`)
+--) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Contenu de la table `user`
 --
 
-INSERT INTO `user` (`id`, `login`) VALUES
-(1, 'test');
+--INSERT INTO `user` (`id`, `login`) VALUES
+--(1, 'test');
 
 --
 -- Contraintes pour les tables exportées
@@ -126,12 +126,12 @@ INSERT INTO `user` (`id`, `login`) VALUES
 --
 -- Contraintes pour la table `consumer_nonce`
 --
-ALTER TABLE `consumer_nonce`
-  ADD CONSTRAINT `consumer_nonce_ibfk_1` FOREIGN KEY (`consumer_id`) REFERENCES `consumer` (`id`) ON DELETE CASCADE;
+--ALTER TABLE `consumer_nonce`
+--  ADD CONSTRAINT `consumer_nonce_ibfk_1` FOREIGN KEY (`consumer_id`) REFERENCES `consumer` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `token`
 --
-ALTER TABLE `token`
-  ADD CONSTRAINT `token_ibfk_2` FOREIGN KEY (`type`) REFERENCES `token_type` (`id`),
-  ADD CONSTRAINT `token_ibfk_1` FOREIGN KEY (`consumer_id`) REFERENCES `consumer` (`id`) ON DELETE CASCADE;
+--ALTER TABLE `token`
+--  ADD CONSTRAINT `token_ibfk_2` FOREIGN KEY (`type`) REFERENCES `token_type` (`id`),
+--  ADD CONSTRAINT `token_ibfk_1` FOREIGN KEY (`consumer_id`) REFERENCES `consumer` (`id`) ON DELETE CASCADE;

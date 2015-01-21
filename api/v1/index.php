@@ -102,7 +102,7 @@ function server_error($message)
 function post_value($field)
 {
 	$json = file_get_contents('php://input');
-	$v = json_decode($json);
+	$v = json_decode($json, TRUE);
 	
 	if (array_key_exists($field, $v))
 	{

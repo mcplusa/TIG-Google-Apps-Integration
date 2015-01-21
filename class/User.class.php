@@ -1,4 +1,4 @@
-<?
+<?php
 	require(dirname(__FILE__)."/../interfaces/IUser.php");
 	
 	class User implements IUser {
@@ -10,7 +10,7 @@
 		/* bogus function to mimic authentification */
 		public static function exist($login){
 			$pdo = Db::singleton();
-			$check = $pdo->query("select id from user where login = '".$login."'");
+			$check = $pdo->query("select user_id as id from users where username = '".$login."'");
 			if($check->rowCount()==1){
 				$check = $check->fetch();
 				return new User($check['id']);
@@ -28,7 +28,7 @@
 		}
 		
 		private function load(){
-			$info = $this->pdo->query("select * from user where id = ".$this->id)->fetch();
+			$info = $this->pdo->query("select user_id as id, username as login from users where user_id = ".$this->id)->fetch();
 			$this->login = $info['login'];
 		}
 
@@ -40,3 +40,4 @@
 			return $this->login;
 		}
 	}
+?>

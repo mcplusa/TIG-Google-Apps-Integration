@@ -4,10 +4,10 @@
 	$a['oauth_token_secret'] = null;
 	$a['authentification_url'] = null;
 	
-	$oauth_client = new Oauth("test","password");
+	$oauth_client = new Oauth("key","secret");
 	$oauth_client->enableDebug();
 	try {
-		$info = $oauth_client->getRequestToken("http://localhost/OAuthProviderExample/oauth/request_token?oauth_callback=http://localhost/OAuthProviderExample/client/callback.php");
+		$info = $oauth_client->getRequestToken("http://192.168.187.132/oauth/request_token?oauth_callback=http://192.168.187.132/client/callback.php");
 		
 		// Merge in the dummy values, to surpress missing index warnings.
 		$info = array_merge($a, $info);

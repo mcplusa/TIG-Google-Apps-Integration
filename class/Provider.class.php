@@ -6,7 +6,7 @@
 		private $consumer;
 		private $oauth_error;
 		private $user;
-		private $authentification_url = "http://localhost/OAuthProviderExample/oauth/login.php";
+		private $authentification_url = "http://192.168.187.132/oauth/login.php";
 		
 		public static function createConsumer(){
 			$key = sha1(OAuthProvider::generateToken(20,true));

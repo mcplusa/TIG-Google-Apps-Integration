@@ -1,4 +1,4 @@
-<?
+<?php
 
 function __autoload($name){
 		require("../class/".$name.".class.php");
@@ -13,7 +13,7 @@ if(isset($_REQUEST['oauth_token'])){
 				<label>Login : </label><input type="text" name="login" /><br />
 				<input type="submit" value="Authenticate to this website" />
 			</form>
-		<? 
+		<?php 
 		} else {
 			$user = User::exist($_POST['login']);
 			if(is_object($user)){

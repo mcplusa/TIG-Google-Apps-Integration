@@ -1,4 +1,4 @@
-<?
+<?php
 /* this is nothing else but a PDO wrapper */
 class Db {
 	
@@ -7,7 +7,7 @@ class Db {
     private static $instance;
  
     private function __construct() {
-		$this->pdoInstance = new PDO("mysql:host=localhost;dbname=oauthProvider","root","");
+		$this->pdoInstance = new PDO("mysql:host=localhost;dbname=pika","root","");
         $this->pdoInstance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
         $this->pdoInstance->exec("set names 'utf8'");
 	}

@@ -101,9 +101,12 @@ function server_error($message)
 
 function post_value($field)
 {
-	if (array_key_exists($field, $_POST))
+	$json = file_get_contents('php://input');
+	$v = json_decode($json);
+	
+	if (array_key_exists($field, $v))
 	{
-		return "'" . mysql_real_escape_string($_POST[$field]) . "'";
+		return "'" . mysql_real_escape_string($v[$field]) . "'";
 	}
 	
 	else

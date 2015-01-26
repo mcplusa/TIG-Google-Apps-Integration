@@ -26,14 +26,16 @@ define('LSNC_API_NAME','LSNC Google Apps API');
 define('LSNC_API_VERSION','1');
 define('LSNC_API_REVISION','0');
 
+// CORS HTTP headers
+header('Access-Control-Allow-Origin: https://mail.google.com');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Headers: accept, authorization');
+header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
 
 // Authentication
 if (!isset($_SERVER['PHP_AUTH_USER'])) 
 {
-    header('Access-Control-Allow-Origin: https://mail.google.com');
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: accept, authorization');
-    header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
+    
     header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
     header('HTTP/1.0 204 No Content');
     echo 'HTTP/1.0 204 No Content';

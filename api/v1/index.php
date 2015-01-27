@@ -543,7 +543,6 @@ else
 	exit();
 }
 
-
 // Main code
 $question_position = strpos($_SERVER['REQUEST_URI'], '?');
 if ($question_position)

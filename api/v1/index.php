@@ -17,9 +17,11 @@
 // Config variables 
 $site_folder_name = 'cms';
 $time_zone = 'America/New_York';
+
+/*
 $http_user = 'api';
 $http_password = 'na5us+wr';
-
+*/
 
 // Definitions
 define('LSNC_API_NAME','LSNC Google Apps API');
@@ -32,7 +34,8 @@ header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: accept, authorization');
 header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
 
-// Authentication
+// HTTP Authentication
+/*
 if (!isset($_SERVER['PHP_AUTH_USER'])) 
 {
     
@@ -51,7 +54,7 @@ else
 		exit();
 	}
 }
-
+*/
 
 // Database variables
 $plSettings = array();
@@ -179,6 +182,23 @@ function next_id($sequence)
 	
 	mysql_query("UNLOCK TABLES") or trigger_error('error');
 	return $next_id;
+}
+
+function check_oauth_var($name)
+{
+	if (!isset($_GET[$name]))
+	{
+		echo "token not sent";
+		return false;
+	}
+	
+	if (strlen($_GET[$name]) != 40)
+	{
+		echo "token not 40 chars";
+		return false;
+	}
+	
+	return true;
 }
 
 // From http://php.net/manual/en/function.http-response-code.php
@@ -501,6 +521,27 @@ class restCaseNote extends restResource
 
 //mysql_connect(DB_HOST,DB_USER,DB_PASS);
 //mysql_select_db(DB_NAME);
+
+// OAuth authentication
+if (check_oauth_var('token') && check_oauth_var('token_secret'))
+{
+	$clean_token = mysql_real_escape_string($_GET['token']);
+	$clean_token_secret = mysql_real_escape_string($_GET['token_secret']);
+	$sql = "SELECT user_id AS row_count FROM oauth_token WHERE type=2 AND token='{$clean_token}' AND token_secret='{$clean_token_secret}'";
+	$result = mysql_query($sql) or server_error("An error was encountered.");
+	
+	if (mysql_num_rows($result) != 1)
+	{
+		http_response_code(401);
+		exit();
+	}
+}
+
+else
+{
+	http_response_code(401);
+	exit();
+}
 
 
 // Main code

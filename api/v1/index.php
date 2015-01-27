@@ -434,7 +434,7 @@ class restResourceList extends restResource
 class restCaseList extends restResourceList 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, status as case_status FROM cases";
+	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id";
 	
 	function get()
 	{
@@ -457,7 +457,7 @@ class restCaseList extends restResourceList
 class restCase extends restResource 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, status as case_status FROM cases WHERE case_id=";
+	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id WHERE case_id=";
 	protected $data_fields = 'case_id, number, status';
 
 	function post_values()
@@ -541,6 +541,7 @@ else
 	http_response_code(401);
 	exit();
 }
+
 
 // Main code
 $question_position = strpos($_SERVER['REQUEST_URI'], '?');

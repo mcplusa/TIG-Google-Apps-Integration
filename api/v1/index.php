@@ -475,7 +475,7 @@ class restCase extends restResource
 class restCaseNoteList extends restResourceList 
 {
 	protected $table = 'activities';
-	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, notes FROM activities WHERE case_id IS NOT NULL";
+	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, activities.notes AS notes, hours, CONCAT(users.last_name, ', ', users.first_name) AS staff, funding AS funding_source FROM activities LEFT JOIN users ON activities.user_id=users.user_id WHERE case_id IS NOT NULL";
 	
 	function get()
 	{
@@ -498,7 +498,7 @@ class restCaseNoteList extends restResourceList
 class restCaseNote extends restResource 
 {
 	protected $table = 'activities';
-	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, notes, hours, funding AS funding_source FROM activities WHERE act_id=";
+	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, activities.notes AS notes, hours, CONCAT(users.last_name, ', ', users.first_name) AS staff, funding AS funding_source FROM activities LEFT JOIN users ON activities.user_id=users.user_id WHERE act_id=";
 	protected $data_fields = 'act_id, case_id, summary, notes, hours, created, act_date, category, user_id, funding';
 	
 	function post_values()

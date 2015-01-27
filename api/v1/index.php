@@ -184,23 +184,6 @@ function next_id($sequence)
 	return $next_id;
 }
 
-function check_oauth_var($name)
-{
-	if (!isset($_GET[$name]))
-	{
-		echo "token not sent";
-		return false;
-	}
-	
-	if (strlen($_GET[$name]) != 40)
-	{
-		echo "token not 40 chars";
-		return false;
-	}
-	
-	return true;
-}
-
 // From http://php.net/manual/en/function.http-response-code.php
 if (!function_exists('http_response_code')) 
 {

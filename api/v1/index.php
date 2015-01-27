@@ -506,26 +506,35 @@ class restCaseNote extends restResource
 //mysql_select_db(DB_NAME);
 
 // OAuth authentication
-/*
-if (check_oauth_var('token'))
+$http_headers = apache_request_headers();
+
+if (!isset($http_headers['Authorization']))
 {
-	$clean_token = mysql_real_escape_string($_GET['token']);
-	$sql = "SELECT user_id AS row_count FROM oauth_token WHERE type=2 AND token='{$clean_token}'";
-	$result = mysql_query($sql) or server_error("An error was encountered.");
-	
-	if (mysql_num_rows($result) != 1)
-	{
-		http_response_code(401);
-		exit();
-	}
+	http_response_code(401);
+	echo "token not sent";
+	return false;
 }
 
-else
+$token = $http_headers['Authorization'];
+$token = str_replace('Bearer ', '', $token);
+$clean_token = mysql_real_escape_string($token);
+
+if (strlen($clean_token) != 40)
+{
+	http_response_code(401);
+	echo "token not 40 chars";
+	return false;
+}
+
+$sql = "SELECT user_id AS row_count FROM oauth_token WHERE type=2 AND token='{$clean_token}'";
+$result = mysql_query($sql) or server_error("An error was encountered.");
+
+if (mysql_num_rows($result) != 1)
 {
 	http_response_code(401);
 	exit();
 }
-*/
+
 
 // Main code
 $question_position = strpos($_SERVER['REQUEST_URI'], '?');

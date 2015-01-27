@@ -523,11 +523,10 @@ class restCaseNote extends restResource
 //mysql_select_db(DB_NAME);
 
 // OAuth authentication
-if (check_oauth_var('token') && check_oauth_var('token_secret'))
+if (check_oauth_var('token'))
 {
 	$clean_token = mysql_real_escape_string($_GET['token']);
-	$clean_token_secret = mysql_real_escape_string($_GET['token_secret']);
-	$sql = "SELECT user_id AS row_count FROM oauth_token WHERE type=2 AND token='{$clean_token}' AND token_secret='{$clean_token_secret}'";
+	$sql = "SELECT user_id AS row_count FROM oauth_token WHERE type=2 AND token='{$clean_token}'";
 	$result = mysql_query($sql) or server_error("An error was encountered.");
 	
 	if (mysql_num_rows($result) != 1)

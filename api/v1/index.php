@@ -523,6 +523,7 @@ class restCaseNote extends restResource
 //mysql_select_db(DB_NAME);
 
 // OAuth authentication
+/*
 if (check_oauth_var('token'))
 {
 	$clean_token = mysql_real_escape_string($_GET['token']);
@@ -541,7 +542,7 @@ else
 	http_response_code(401);
 	exit();
 }
-
+*/
 
 // Main code
 $question_position = strpos($_SERVER['REQUEST_URI'], '?');

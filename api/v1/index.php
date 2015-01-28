@@ -18,15 +18,12 @@
 $site_folder_name = 'cms';
 $time_zone = 'America/New_York';
 
-/*
-$http_user = 'api';
-$http_password = 'na5us+wr';
-*/
 
 // Definitions
 define('LSNC_API_NAME','LSNC Google Apps API');
 define('LSNC_API_VERSION','1');
 define('LSNC_API_REVISION','0');
+
 
 // CORS HTTP headers
 header('Access-Control-Allow-Origin: https://mail.google.com');
@@ -527,9 +524,22 @@ if (!isset($_SERVER['PHP_AUTH_USER']))
     exit;
 }
 
+else if (!isset($_SERVER['PHP_AUTH_PW'])) 
+{
+	header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
+	header('HTTP/1.0 401 Unauthorized');
+	exit();
+}
+
 else 
 {
-	if($_SERVER['PHP_AUTH_USER'] != $http_user || $_SERVER['PHP_AUTH_PW'] != $http_password)
+	$safe_username = mysql_real_escape_string($_SERVER['PHP_AUTH_USER']);
+	$safe_password_hash = mysql_real_escape_string(md5($_SERVER['PHP_AUTH_PW']));
+	
+	$sql = "SELECT user_id FROM users WHERE username='{$safe_username}' AND password='{$safe_password_hash}'";
+	$result = mysql_query($sql) or server_error("An error was encountered.");
+	
+	if (mysql_num_rows($result) != 1)
 	{
 		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
 		header('HTTP/1.0 401 Unauthorized');

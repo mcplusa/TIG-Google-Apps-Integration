@@ -35,7 +35,6 @@ header('Access-Control-Allow-Headers: accept, authorization');
 header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
 
 // HTTP Authentication
-/*
 if (!isset($_SERVER['PHP_AUTH_USER'])) 
 {
     
@@ -54,7 +53,7 @@ else
 		exit();
 	}
 }
-*/
+
 
 // Database variables
 $plSettings = array();
@@ -506,6 +505,7 @@ class restCaseNote extends restResource
 //mysql_select_db(DB_NAME);
 
 // OAuth authentication
+/*
 $http_headers = apache_request_headers();
 
 if (!isset($http_headers['Authorization']))
@@ -534,7 +534,7 @@ if (mysql_num_rows($result) != 1)
 	http_response_code(401);
 	exit();
 }
-
+*/
 
 // Main code
 $question_position = strpos($_SERVER['REQUEST_URI'], '?');

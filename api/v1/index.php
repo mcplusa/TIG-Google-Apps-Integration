@@ -34,26 +34,6 @@ header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: accept, authorization');
 header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
 
-// HTTP Authentication
-if (!isset($_SERVER['PHP_AUTH_USER'])) 
-{
-    
-    header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'HTTP/1.0 401 Unauthorized';
-    exit;
-}
-
-else 
-{
-	if($_SERVER['PHP_AUTH_USER'] != $http_user || $_SERVER['PHP_AUTH_PW'] != $http_password)
-	{
-		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
-		header('HTTP/1.0 401 Unauthorized');
-		exit();
-	}
-}
-
 
 // Database variables
 $plSettings = array();
@@ -535,6 +515,28 @@ if (mysql_num_rows($result) != 1)
 	exit();
 }
 */
+
+
+// HTTP Authentication
+if (!isset($_SERVER['PHP_AUTH_USER'])) 
+{
+    
+    header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
+    header('HTTP/1.0 401 Unauthorized');
+    echo 'HTTP/1.0 401 Unauthorized';
+    exit;
+}
+
+else 
+{
+	if($_SERVER['PHP_AUTH_USER'] != $http_user || $_SERVER['PHP_AUTH_PW'] != $http_password)
+	{
+		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
+		header('HTTP/1.0 401 Unauthorized');
+		exit();
+	}
+}
+
 
 // Main code
 $question_position = strpos($_SERVER['REQUEST_URI'], '?');

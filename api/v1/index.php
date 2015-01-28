@@ -17,23 +17,28 @@
 // Config variables 
 $site_folder_name = 'cms';
 $time_zone = 'America/New_York';
+
+/*
 $http_user = 'api';
 $http_password = 'na5us+wr';
-
+*/
 
 // Definitions
 define('LSNC_API_NAME','LSNC Google Apps API');
 define('LSNC_API_VERSION','1');
 define('LSNC_API_REVISION','0');
 
+// CORS HTTP headers
+header('Access-Control-Allow-Origin: https://mail.google.com');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Headers: accept, authorization');
+header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
 
-// Authentication
+// HTTP Authentication
+/*
 if (!isset($_SERVER['PHP_AUTH_USER'])) 
 {
-    header('Access-Control-Allow-Origin: https://mail.google.com');
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: accept, authorization');
-    header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
+    
     header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
     header('HTTP/1.0 204 No Content');
     echo 'HTTP/1.0 204 No Content';
@@ -49,7 +54,7 @@ else
 		exit();
 	}
 }
-
+*/
 
 // Database variables
 $plSettings = array();
@@ -101,15 +106,52 @@ function server_error($message)
 
 function post_value($field)
 {
-	if (array_key_exists($field, $_POST))
+	$json = file_get_contents('php://input');
+	$v = json_decode($json, TRUE);
+	
+	if (!is_array($v))
 	{
-		return "'" . mysql_real_escape_string($_POST[$field]) . "'";
+		server_error("Invalid JSON input.");
+	}
+	
+	if (array_key_exists($field, $v))
+	{
+		return "'" . mysql_real_escape_string($v[$field]) . "'";
 	}
 	
 	else
 	{
 		return "NULL";
 	}		
+}
+
+function get_value($field)
+{
+	if (isset($_GET[$field]))
+	{
+		return mysql_real_escape_string($_GET[$field]);
+	}
+	
+	else return null;
+}
+
+function get_value_numeric($field)
+{
+	if (isset($_GET[$field]))
+	{
+		if (is_numeric($_GET[$field]))
+		{
+			return mysql_real_escape_string($_GET[$field]);
+		}
+		
+		else
+		{
+			http_response_code(400);
+			exit();
+		}
+	}
+	
+	else return null;
 }
 
 function next_id($sequence)
@@ -236,6 +278,7 @@ class restResource
 		if (mysql_num_rows($result) == 0)
 		{
 			http_response_code(404);  // NOT FOUND
+			exit();
 		}
 		
 		else if (mysql_num_rows($result) > 1)
@@ -326,9 +369,27 @@ class restResourceList extends restResource
 		return;		
 	}
 
-	function get()
+	function get($extra_sql = '')
 	{
-		$result = mysql_query($this->get_sql);
+		$safe_limit = 10;
+		$safe_offset = 0;
+		
+		$tmp_offset = get_value_numeric('offset');
+		
+		if ($tmp_offset)
+		{
+			$safe_offset = $tmp_offset;
+		}
+		
+		$tmp_limit = get_value_numeric('limit');
+		
+		if ($tmp_limit)
+		{
+			$safe_limit = $tmp_limit;		
+		}
+
+		$sql = $this->get_sql . " {$extra_sql} LIMIT {$safe_offset}, {$safe_limit}";
+		$result = mysql_query($sql);
 		$a = array();
 		
 		while (	$row = mysql_fetch_assoc($result))
@@ -356,7 +417,20 @@ class restResourceList extends restResource
 class restCaseList extends restResourceList 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, status as case_status FROM cases";
+	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id";
+	
+	function get()
+	{
+		$extra_sql = '';
+		$safe_q = get_value('q');
+		
+		if ($safe_q)
+		{
+			$extra_sql = "WHERE number LIKE '%{$safe_q}%'";
+		}
+
+		parent::get($extra_sql);
+	}
 }
 
 
@@ -366,7 +440,7 @@ class restCaseList extends restResourceList
 class restCase extends restResource 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, status as case_status FROM cases WHERE case_id=";
+	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id WHERE case_id=";
 	protected $data_fields = 'case_id, number, status';
 
 	function post_values()
@@ -384,7 +458,20 @@ class restCase extends restResource
 class restCaseNoteList extends restResourceList 
 {
 	protected $table = 'activities';
-	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, notes FROM activities WHERE case_id IS NOT NULL LIMIT 1000";
+	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, activities.notes AS notes, hours, CONCAT(users.last_name, ', ', users.first_name) AS staff, funding AS funding_source FROM activities LEFT JOIN users ON activities.user_id=users.user_id WHERE case_id IS NOT NULL";
+	
+	function get()
+	{
+		$extra_sql = '';
+		$safe_case_id = get_value_numeric('case_id');
+		
+		if ($safe_case_id)
+		{
+			$extra_sql = "AND case_id = {$safe_case_id}";
+		}
+		
+		parent::get($extra_sql);
+	}
 }
 
 
@@ -394,7 +481,7 @@ class restCaseNoteList extends restResourceList
 class restCaseNote extends restResource 
 {
 	protected $table = 'activities';
-	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, notes, hours, funding AS funding_source FROM activities WHERE act_id=";
+	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, activities.notes AS notes, hours, CONCAT(users.last_name, ', ', users.first_name) AS staff, funding AS funding_source FROM activities LEFT JOIN users ON activities.user_id=users.user_id WHERE act_id=";
 	protected $data_fields = 'act_id, case_id, summary, notes, hours, created, act_date, category, user_id, funding';
 	
 	function post_values()
@@ -418,14 +505,53 @@ class restCaseNote extends restResource
 //mysql_connect(DB_HOST,DB_USER,DB_PASS);
 //mysql_select_db(DB_NAME);
 
+// OAuth authentication
+$http_headers = apache_request_headers();
+
+if (!isset($http_headers['Authorization']))
+{
+	http_response_code(401);
+	echo "token not sent";
+	return false;
+}
+
+$token = $http_headers['Authorization'];
+$token = str_replace('Bearer ', '', $token);
+$clean_token = mysql_real_escape_string($token);
+
+if (strlen($clean_token) != 40)
+{
+	http_response_code(401);
+	echo "token not 40 chars";
+	return false;
+}
+
+$sql = "SELECT user_id AS row_count FROM oauth_token WHERE type=2 AND token='{$clean_token}'";
+$result = mysql_query($sql) or server_error("An error was encountered.");
+
+if (mysql_num_rows($result) != 1)
+{
+	http_response_code(401);
+	exit();
+}
+
 
 // Main code
+$question_position = strpos($_SERVER['REQUEST_URI'], '?');
+if ($question_position)
+{
+	$uri = substr($_SERVER['REQUEST_URI'], 0, $question_position);
+}
 
-$api_request = explode('/', $_SERVER['REQUEST_URI']);
+else
+{
+	$uri = $_SERVER['REQUEST_URI'];
+}
+
+$api_request = explode('/', $uri);
 array_shift($api_request);  //  Remove '/'
 array_shift($api_request);  //  Remove 'api/'
 array_shift($api_request);  //  Remove 'v1/'
-
 /*	If the URL has a trailing '/', an empty element will be tacked on the end of the $api_request
 	array.  Clean this up with the following code.
 */

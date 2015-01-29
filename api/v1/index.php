@@ -28,7 +28,7 @@ define('LSNC_API_REVISION','0');
 // CORS HTTP headers
 header('Access-Control-Allow-Origin: https://mail.google.com');
 header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Headers: accept, authorization');
+header('Access-Control-Allow-Headers: accept, authorization, content-type');
 header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
 
 
@@ -399,10 +399,13 @@ class restCaseList extends restResourceList
 	{
 		$extra_sql = '';
 		$safe_q = get_value('q');
-		
-		if ($safe_q)
+		$safe_u = get_value('u');
+
+		if (($safe_q) || ($safe_u))
 		{
-			$extra_sql = "WHERE number LIKE '%{$safe_q}%'";
+			$extra_sql = " WHERE number LIKE '%{$safe_q}%'";
+			if($safe_u)
+				$extra_sql.= " and us.username = '{$safe_u}'";
 		}
 
 		parent::get($extra_sql);
@@ -457,27 +460,23 @@ class restCaseNoteList extends restResourceList
 class restCaseNote extends restResource 
 {
 	protected $table = 'activities';
-	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, activities.notes AS notes, hours, CONCAT(users.last_name, ', ', users.first_name) AS staff, funding AS funding_source FROM activities LEFT JOIN users ON activities.user_id=users.user_id WHERE act_id=";
-	protected $data_fields = 'act_id, case_id, summary, notes, hours, created, act_date, category, user_id, funding';
+	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, notes, hours, funding AS funding_source FROM activities WHERE act_id=";
+	protected $data_fields = 'act_id, case_id, summary, notes, act_date, act_time, act_type, last_changed';
+
 	
 	function post_values()
-	{
-		$x = post_value('case_id') . ',';
-		$x .= post_value('summary') . ',';
-		$x .= post_value('notes') . ',';
-		$x .= post_value('hours') . ',';
-		$x .= post_value('created') . ',';
-		$x .= post_value('act_date') . ',';
-		$x .= post_value('category') . ',';
-		$x .= post_value('user_id') . ',';
-		$x .= post_value('funding');
-		
-		return $x;
-	}
+  {
+      $x = post_value("case_id") . ",";
+      $x .= post_value("summary") . ",";
+      $x .= post_value("notes") . ",";
+      $x .= "'" . date("Y-n-j") . "',";
+      $x .= "'" . date("H:i:s") . "',";
+      $x .= "'N',";
+      $x .= "'" . date("Y-n-j") . " " . date("H:i:s") . "'";
+      
+      return $x;
+  }
 }
-
-
-
 //mysql_connect(DB_HOST,DB_USER,DB_PASS);
 //mysql_select_db(DB_NAME);
 

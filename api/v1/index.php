@@ -536,7 +536,7 @@ else
 	$safe_username = mysql_real_escape_string($_SERVER['PHP_AUTH_USER']);
 	$safe_password_hash = mysql_real_escape_string(md5($_SERVER['PHP_AUTH_PW']));
 	
-	$sql = "SELECT user_id FROM users WHERE username='{$safe_username}' AND password='{$safe_password_hash}'";
+	$sql = "SELECT user_id FROM users WHERE enabled=1 AND username='{$safe_username}' AND password='{$safe_password_hash}'";
 	$result = mysql_query($sql) or server_error("An error was encountered.");
 	
 	if (mysql_num_rows($result) != 1)

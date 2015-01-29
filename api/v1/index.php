@@ -405,7 +405,7 @@ class restCaseList extends restResourceList
 		{
 			$extra_sql = " WHERE number LIKE '%{$safe_q}%'";
 			if($safe_u)
-				$extra_sql.= " and us.username = '{$safe_u}'";
+				$extra_sql.= " and users.username = '{$safe_u}'";
 		}
 
 		parent::get($extra_sql);

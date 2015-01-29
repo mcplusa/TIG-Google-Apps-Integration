@@ -393,7 +393,7 @@ class restResourceList extends restResource
 class restCaseList extends restResourceList 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id";
+	protected $get_sql = "SELECT case_id, number AS case_number, open_date, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id";
 	
 	function get()
 	{

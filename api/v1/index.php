@@ -519,8 +519,8 @@ if (!isset($_SERVER['PHP_AUTH_USER']))
 {
     
     header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'HTTP/1.0 401 Unauthorized';
+    header('HTTP/1.0 204 No Content');
+    echo 'HTTP/1.0 204 No Content';
     exit;
 }
 

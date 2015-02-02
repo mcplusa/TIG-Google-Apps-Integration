@@ -133,7 +133,7 @@ function get_value_numeric($field)
 function next_id($sequence)
 {
 	// VARIABLES
-	$safe_sequence = mysql_escape_string($sequence);
+	$safe_sequence = mysql_real_escape_string($sequence);
 	$next_id = null;
 	
 	mysql_query("LOCK TABLES counters WRITE") or trigger_error('counters table lock failed');

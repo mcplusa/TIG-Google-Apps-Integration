@@ -83,7 +83,8 @@ function server_error($message)
 function post_value($field)
 {
 	$json = file_get_contents('php://input');
-	$v = json_decode($json, TRUE);
+	$v0 = json_decode($json, TRUE);
+	$v = $v0[0];
 	
 	if (!is_array($v))
 	{

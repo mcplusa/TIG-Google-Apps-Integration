@@ -12,7 +12,8 @@
   * Return true if the code runs cleanly, return false if not.
   *
   * @author  Name <email@gmail.com>
-  * @param array  $activity  This is an example function/method parameter description.
+  * @param   array  $activity  Contains database values for the tickler record.
+  * @return  boolean Extension code ran successfully?
   */
   
 function create_tickler($activity)

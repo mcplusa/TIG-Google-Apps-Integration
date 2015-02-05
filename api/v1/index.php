@@ -419,7 +419,7 @@ class restCaseList extends restResourceList
 class restCase extends restResource 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id WHERE case_id=";
+	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate, google_drive_folder_id FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id WHERE case_id=";
 	protected $data_fields = 'case_id, number, status';
 
 	function post_values()
@@ -427,6 +427,20 @@ class restCase extends restResource
 		$x = post_value('case_number') . ', 1';
 		
 		return $x;
+	}
+	
+	function put()
+	{
+		$x = file_get_contents("php://input");
+		$y = json_decode($x, TRUE);
+		$z = mysql_real_escape_string($y['google_drive_folder_id']);
+		$sql = "UPDATE {$this->table} SET google_drive_folder_id = '{$z}'"; 
+		$sql .= " WHERE case_id = " . mysql_real_escape_string($this->id);		
+		$result = mysql_query($sql) or server_error(mysql_error($result));
+		
+		$this->transmitJson();
+		
+		return;
 	}
 }
 

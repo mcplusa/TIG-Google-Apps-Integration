@@ -6,7 +6,7 @@
             "@type": "EmailMessage",
             "action": {
                 "@type": "ViewAction",
-                "url": "%action_url%",
+                "url": "%eventUrl%",
             "name": "Add to Calendar"
             }
         }
@@ -14,10 +14,11 @@
   </head>
   <body>
     <p>
-      This email is about Case %case_id%
+      This email is about Case %case%
       <br />
+      %caseLink%
       <br />
-      <a href="%action_url%" >Add to Calendar</a>
+      <a href="%eventUrl%" >Add to Calendar</a>
     </p>
   </body>
 </html>

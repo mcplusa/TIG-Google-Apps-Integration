@@ -1,5 +1,5 @@
 <?php 
-
+session_start();
 
 /*** WARNING:  I haven't added authentication yet, until it's
 	added, this script makes your data available to anyone.
@@ -399,7 +399,10 @@ class restCaseList extends restResourceList
 	{
 		$extra_sql = '';
 		$safe_q = get_value('q');
-		$safe_u = get_value('u');
+		$safe_u = "";
+		if(!isset($_GET['allCases'])){
+			$safe_u = $_SERVER['PHP_AUTH_USER'];
+		}
 
 		if (($safe_q) || ($safe_u))
 		{
@@ -527,40 +530,6 @@ if (mysql_num_rows($result) != 1)
 */
 
 
-// HTTP Authentication
-if (!isset($_SERVER['PHP_AUTH_USER'])) 
-{
-    
-    header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
-    header('HTTP/1.0 204 No Content');
-    echo 'HTTP/1.0 204 No Content';
-    exit;
-}
-
-else if (!isset($_SERVER['PHP_AUTH_PW'])) 
-{
-	header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
-	header('HTTP/1.0 401 Unauthorized');
-	exit();
-}
-
-else 
-{
-	$safe_username = mysql_real_escape_string($_SERVER['PHP_AUTH_USER']);
-	$safe_password_hash = mysql_real_escape_string(md5($_SERVER['PHP_AUTH_PW']));
-	
-	$sql = "SELECT user_id FROM users WHERE enabled=1 AND username='{$safe_username}' AND password='{$safe_password_hash}'";
-	$result = mysql_query($sql) or server_error("An error was encountered.");
-	
-	if (mysql_num_rows($result) != 1)
-	{
-		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
-		header('HTTP/1.0 401 Unauthorized');
-		exit();
-	}
-}
-
-
 // Main code
 $question_position = strpos($_SERVER['REQUEST_URI'], '?');
 if ($question_position)
@@ -583,6 +552,41 @@ array_shift($api_request);  //  Remove 'v1/'
 if ('' == $api_request[sizeof($api_request) - 1])
 {
 	array_pop($api_request);
+}
+
+if(implode('/',$api_request) != "drive/auth"){
+	// HTTP Authentication
+	if (!isset($_SERVER['PHP_AUTH_USER'])) 
+	{
+	    
+	    header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
+	    header('HTTP/1.0 204 No Content');
+	    echo 'HTTP/1.0 204 No Content';
+	    exit;
+	}
+
+	else if (!isset($_SERVER['PHP_AUTH_PW'])) 
+	{
+		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
+		header('HTTP/1.0 401 Unauthorized');
+		exit();
+	}
+
+	else 
+	{
+		$safe_username = mysql_real_escape_string($_SERVER['PHP_AUTH_USER']);
+		$safe_password_hash = mysql_real_escape_string(md5($_SERVER['PHP_AUTH_PW']));
+		
+		$sql = "SELECT user_id FROM users WHERE enabled=1 AND username='{$safe_username}' AND password='{$safe_password_hash}'";
+		$result = mysql_query($sql) or server_error("An error was encountered.");
+		
+		if (mysql_num_rows($result) != 1)
+		{
+			header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
+			header('HTTP/1.0 401 Unauthorized');
+			exit();
+		}
+	}
 }
 
 /*
@@ -762,13 +766,62 @@ else if ('casenotes' == $api_request[0])
 	}
 }
 
+else if ('drive' == $api_request[0]){
+	$driveExtensionPath = '../../' . $site_folder_name . '-custom/extensions/google_drive_connector/index.php';
+
+	if(!file_exists($driveExtensionPath)){
+		http_response_code(405);
+	}else{
+		require_once $driveExtensionPath;
+
+		$username = "";
+		if(isset($_SERVER['PHP_AUTH_USER'])){
+			$username = $_SERVER['PHP_AUTH_USER'];
+		}
+
+		$rest = new PikaDrive($username);
+
+		if(!isset($api_request[1])){
+			if($rest->check())
+				echo "authorized";
+		}else {
+			switch ($api_request[1]) {
+				case 'auth':
+					if(isset($_GET['code'])){
+						$rest->setToken($_SESSION['username'], $_GET['code']);
+						unset($_SESSION['username']);
+						echo "<script>window.close();</script>";
+					}else{
+						$_SESSION['username'] = get_value('username');
+						$rest->authenticate();
+					}
+					break;
+
+				case 'upload':
+					echo $rest->uploadFile($_FILES['upfile']['tmp_name'], $_POST['file_name'], $_POST['folder_id']);
+					break;
+
+				case 'new_folder':
+					echo $rest->createFolder($_POST['folder_name']);
+					break;
+
+				case 'unauthorize':
+					$rest->unauthorize($username);
+					break;
+
+				default:
+					break;
+			}
+		}
+	}
+}
+
 else
 {
 	http_response_code(400);  // BAD REQUEST
 }
 
 exit();
-
 
 switch($api_request[0]) 
 {

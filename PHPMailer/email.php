@@ -69,12 +69,10 @@
           '%client%'
       );
 
-      print_r($v);
       $values = array(
           $v['case_number'],
           $v['client_name']
       );
-      echo $EmailSubject;
       $this->subject = str_replace($keys,$values,$EmailSubject);
     }
 

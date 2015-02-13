@@ -798,11 +798,11 @@ else if ('drive' == $api_request[0]){
 					break;
 
 				case 'upload':
-					echo $rest->uploadFile($_FILES['upfile']['tmp_name'], $_POST['file_name'], $_POST['folder_id']);
+					echo json_encode($rest->uploadFile($_FILES['upfile']['tmp_name'], $_POST['file_name'], $_POST['folder_id']));
 					break;
 
 				case 'new_folder':
-					echo $rest->createFolder($_POST['folder_name']);
+					echo json_encode($rest->createFolder($_POST['folder_name']));
 					break;
 
 				case 'unauthorize':

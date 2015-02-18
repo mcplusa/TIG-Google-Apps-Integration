@@ -131,4 +131,15 @@ class PikaDrive {
 
     return $files['items'];
   }
+  
+  function isAuthenticated($username){
+    $tokenPath = $this->tokenPath . $username;
+
+	if(file_exists($tokenPath)){
+	    return true;
+	}
+
+    return false;
+  }
+
 }

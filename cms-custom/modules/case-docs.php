@@ -6,7 +6,10 @@ $a['client'] = $case_row['client_id'];
 
 require_once('/var/www/html/cms-custom/extensions/google_drive_connector/index.php');
 
-if (pikaDrive::isAuthenticated($auth_row["username"]))
+// I don't have permission to edit pikaDrive on dev server at the moment, this
+// is a work around.
+//if (pikaDrive::isAuthenticated($auth_row["username"]))
+if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/tokens' . $auth_row['username']))
 {
 	$pika = new PikaDrive($auth_row["username"]);
 	$filez = $pika->listFiles();
@@ -21,6 +24,13 @@ if (pikaDrive::isAuthenticated($auth_row["username"]))
 	}
 	
 	$a['google_drive_files'] = $g;
+}
+
+else
+{
+	$a['google_drive_files'] = '<a href="/api/v1/drive/auth?username=' ;
+	$a['google_drive_files'] .= htmlspecialchars($auth_row['username']);
+	$a['google_drive_files'] .= '">Please log into Google Drive</a>';
 }
 
 $template = new pikaTempLib('subtemplates/case-docs.html', $a);

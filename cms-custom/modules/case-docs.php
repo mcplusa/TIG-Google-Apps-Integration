@@ -9,7 +9,7 @@ require_once('/var/www/html/cms-custom/extensions/google_drive_connector/index.p
 // I don't have permission to edit pikaDrive on dev server at the moment, this
 // is a work around.
 //if (pikaDrive::isAuthenticated($auth_row["username"]))
-if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/tokens' . $auth_row['username']))
+if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/tokens/' . $auth_row['username']))
 {
 	$pika = new PikaDrive($auth_row["username"]);
 	$filez = $pika->listFiles();
@@ -24,11 +24,15 @@ if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/toke
 	}
 	
 	$a['google_drive_files'] = $g;
+	
+	// Add a "Log out of Google Drive" button at the bottom
+	$a['google_drive_files'] .= '<a class="btn btn-mini" href="/api/v1/drive/unauthorize">' ;
+	$a['google_drive_files'] .= 'Log out of Google Drive</a>';
 }
 
 else
 {
-	$a['google_drive_files'] = '<a href="/api/v1/drive/auth?username=' ;
+	$a['google_drive_files'] = '<a class="btn btn-large" href="/api/v1/drive/auth?username=' ;
 	$a['google_drive_files'] .= htmlspecialchars($auth_row['username']);
 	$a['google_drive_files'] .= '">Please log into Google Drive</a>';
 }

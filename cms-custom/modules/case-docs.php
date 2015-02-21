@@ -4,7 +4,8 @@ $a = $case_row;
 $a['recipient'] = $case_row['client_id'];
 $a['client'] = $case_row['client_id'];
 
-require_once('/var/www/html/cms-custom/extensions/google_drive_connector/index.php');
+/*
+	require_once('/var/www/html/cms-custom/extensions/google_drive_connector/index.php');
 
 // I don't have permission to edit pikaDrive on dev server at the moment, this
 // is a work around.
@@ -36,6 +37,7 @@ else
 	$a['google_drive_files'] .= htmlspecialchars($auth_row['username']);
 	$a['google_drive_files'] .= '">Please log into Google Drive</a>';
 }
+*/
 
 $template = new pikaTempLib('subtemplates/case-docs.html', $a);
 $C .= $template->draw();

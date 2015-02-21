@@ -70,7 +70,6 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 	$file_list_output = '';
 	$file_list = $folder_list = '';
 	
-	
 		
 	
 	
@@ -93,7 +92,7 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/tokens/' . $auth_row['username']))
 		{
 			$pika = new PikaDrive($auth_row["username"]);
-			$filez = $pika->listFiles();
+			$filez = $pika->listFiles(pl_grab_get('folder_ptr', null));
 			$docs_array = array();
 			//var_dump($filez); exit();
 			
@@ -105,6 +104,7 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 				$f['doc_size'] = null;
 				$f['description'] = null;
 				$f['folder_ptr'] = null;
+				$f['doc_id'] = $f['id'];
 				
 				if ($f['mimeType'] == 'application/vnd.google-apps.folder')
 				{
@@ -249,7 +249,7 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		elseif($file['folder'] == 1)
 		{
 			$docs[$key]['li'] = "<a onClick=\"fileList('{$field_name}','{$file['doc_id']}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">{$file['doc_name']}</a>&nbsp;";
-			if($temp_args['mode'] != 'select')
+			if($temp_args['mode'] != 'select' && !$google_drive_mode)
 			{
 				$docs[$key]['li'] .= "<span class='folder_actions'>
 									(<a href=\"\" onClick=\"editFile('{$field_name}','{$file['doc_id']}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}');return false;\">Edit</a>

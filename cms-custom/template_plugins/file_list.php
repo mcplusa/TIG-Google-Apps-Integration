@@ -129,9 +129,19 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		//print_r($docs_array);
 		if($file['folder'] != 1)
 		{
-			$docs[$key]['li'] = "<a href=\"{$base_url}/documents.php?doc_id={$file['doc_id']}&action=download\" target=\"_blank\">{$file['doc_name']}</a>&nbsp;";
+			if ($google_drive_mode)
+			{
+				$docs[$key]['li'] = "<a href=\"{$file['webContentLink']}\"><img src=\"{$file['iconLink']}\">";				
+			}
+			
+			else
+			{
+				$docs[$key]['li'] = "<a href=\"{$base_url}/documents.php?doc_id={$file['doc_id']}&action=download\" target=\"_blank\">";
+			}
+
+			$docs[$key]['li'] .= "{$file['doc_name']}</a>&nbsp;";
 		
-           switch ($file['mime_type']) 
+			switch ($file['mime_type']) 
             {
                 case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                 case 'application/vnd.openxmlformats-officedocument.word':

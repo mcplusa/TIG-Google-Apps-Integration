@@ -120,8 +120,13 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			}
 			
 			// Add a "Log out of Google Drive" button at the bottom
-			$file_list_output .= '<a class="btn btn-mini" href="/api/v1/drive/unauthorize">' ;
-			$file_list_output .= 'Log out of Google Drive</a>';
+			//$file_list_output .= '<a class="btn btn-mini" href="/api/v1/drive/unauthorize">' ;
+			//$file_list_output .= 'Log out of Google Drive</a>';
+			/*
+			$file_list_output .= '<a class="btn btn-mini" href="/api/v1/drive/unauthorize?username=' ;
+			$file_list_output .= htmlspecialchars($auth_row['username']);
+			$file_list_output .= '">Log out of Google Drive</a>';
+			*/
 		}
 		
 		else

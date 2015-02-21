@@ -131,9 +131,17 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		
 		else
 		{
-			$file_list_output .= '<a class="btn btn-large" href="/api/v1/drive/auth?username=' ;
-			$file_list_output .= htmlspecialchars($auth_row['username']);
-			$file_list_output .= '">Please log into Google Drive</a>';
+			$clean_username = htmlspecialchars($auth_row['username']);
+			
+			$file_list_output .= '<a class="btn btn-large"';
+			$file_list_output .= ' onClick=\'window.open("/api/v1/drive/auth?username='.$clean_username.'", "Request for Authorization", "width=600, height=400, scrollbars=yes");\'';
+			$file_list_output .= '>Please log into Google Drive</a>';
+
+			//$file_list_output .= '<a class="btn btn-large" href="/api/v1/drive/auth?username=' ;
+			//$file_list_output .= htmlspecialchars($auth_row['username']);
+			//$file_list_output .= '" target="_blank">Please log into Google Drive</a>';
+
+			$file_list_output .= '<p>Please reload this page once you\'ve logged in.</p>';
 		}
 	}
 	

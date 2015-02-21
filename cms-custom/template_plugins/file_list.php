@@ -28,8 +28,8 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		'folder_id_hidden' => false, // Hidden current_folder field (for folder selection)
 		'doc_id_hidden' => false, // Hidden current doc_id field (for document selection)
 		'div' => true,
-		'width' => '305',
-		'height' => '170',
+		'width' => '325',
+		'height' => '525',
 		'class' => '',
 		// Mode (edit/select/edit_select)
 		'mode' => 'edit'
@@ -95,10 +95,27 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			$pika = new PikaDrive($auth_row["username"]);
 			$filez = $pika->listFiles();
 			$docs_array = array();
+			//var_dump($filez); exit();
 			
 			foreach ($filez as $f)
 			{
 				$f['doc_name'] = $f['title'];
+				$f['mime_type'] = $f['mimeType'];
+				$f['doc_id'] = null;
+				$f['doc_size'] = null;
+				$f['description'] = null;
+				$f['folder_ptr'] = null;
+				
+				if ($f['mimeType'] == 'application/vnd.google-apps.folder')
+				{
+					$f['folder'] = true;
+				}
+				
+				else
+				{
+					$f['folder'] = false;
+				}
+				
 				$docs_array[] = $f;
 			}
 			
@@ -124,14 +141,33 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 	foreach ($docs_array as $key => $file)
 	{
 		// Files		
-		$user = new pikaUser($file['user_id']);
-		$user_name = pikaTempLib::plugin('text_name','',$user->getValues());
+		if ($google_drive_mode)
+		{
+			$user_name = 'USERNAME place holder';
+		}
+		
+		else
+		{
+			$user = new pikaUser($file['user_id']);
+			$user_name = pikaTempLib::plugin('text_name','',$user->getValues());			
+		}
+		
 		//print_r($docs_array);
 		if($file['folder'] != 1)
 		{
 			if ($google_drive_mode)
 			{
-				$docs[$key]['li'] = "<a href=\"{$file['webContentLink']}\"><img src=\"{$file['iconLink']}\">";				
+				if (array_key_exists('webContentLink', $file))
+				{
+					// A downloadable file (Word, PDF, JPG, etc.
+					$docs[$key]['li'] = "<a href=\"{$file['webContentLink']}\"><img src=\"{$file['iconLink']}\">";
+				}
+				
+				else
+				{
+					// A Google Docs file.
+					$docs[$key]['li'] = "<a href=\"{$file['selfLink']}\"><img src=\"{$file['iconLink']}\">";				
+				}
 			}
 			
 			else

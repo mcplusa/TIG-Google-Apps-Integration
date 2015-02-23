@@ -806,7 +806,7 @@ else if ('drive' == $api_request[0]){
 					break;
 
 				case 'unauthorize':
-					$rest->unauthorize($username);
+					$rest->unauthorize(htmlspecialchars($_GET['username']));
 					break;
 
 				default:

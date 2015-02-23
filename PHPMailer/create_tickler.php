@@ -8,16 +8,19 @@
   */
 
   function create_tickler($activity){
-    $mail = new PikaEmail;
+    if(!empty($activity['tickler_email'])){
+      $mail = new PikaEmail;
 
-    $begin = strtotime($activity['act_date']." ".$activity['act_time']);
-    if(isset($activity['act_end_date'])){
-      $end = strtotime($activity['act_end_date']." ".$activity['act_end_time']);
-    }else $end = $begin;
+      $begin = strtotime($activity['act_date']." ".$activity['act_time']);
+      if(isset($activity['act_end_date'])){
+        $end = strtotime($activity['act_end_date']." ".$activity['act_end_time']);
+      }else $end = $begin;
 
-    $mail->generateEmailContent($activity['case_number'], $activity['case_link'], $begin, $end);
-    $mail->formatSubject($activity);
-    return $mail->send($activity['tickler_email']);
+      $mail->generateEmailContent($activity['case_number'], $activity['case_link'], $begin, $end);
+      $mail->formatSubject($activity);
+      return $mail->send($activity['tickler_email']);
+    }else
+      return true;
   }
 
 ?>

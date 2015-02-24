@@ -118,15 +118,6 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 				
 				$docs_array[] = $f;
 			}
-			
-			// Add a "Log out of Google Drive" button at the bottom
-			//$file_list_output .= '<a class="btn btn-mini" href="/api/v1/drive/unauthorize">' ;
-			//$file_list_output .= 'Log out of Google Drive</a>';
-			/*
-			$file_list_output .= '<a class="btn btn-mini" href="/api/v1/drive/unauthorize?username=' ;
-			$file_list_output .= htmlspecialchars($auth_row['username']);
-			$file_list_output .= '">Log out of Google Drive</a>';
-			*/
 		}
 		
 		else
@@ -352,6 +343,19 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 	
 	
 	
+	if ($google_drive_mode)
+	{
+		// I don't have permission to edit pikaDrive on dev server at the moment, this
+		// is a work around.
+		//if (pikaDrive::isAuthenticated($auth_row["username"]))
+		if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/tokens/' . $auth_row['username']))
+		{
+			// Add a "Log out of Google Drive" button at the bottom
+			$file_list_output .= '<a class="btn btn-mini" href="/api/v1/drive/unauthorize?username=' ;
+			$file_list_output .= htmlspecialchars($auth_row['username']);
+			$file_list_output .= '">Log out of Google Drive</a>';
+		}
+	}
 	
 	return $file_list_output;
 }

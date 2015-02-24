@@ -167,8 +167,8 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			{
 				// AMW - This seems to work a lot better than using $file['webContentLink']
 				$docs[$key]['li'] = "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
-				$docs[$key]['li'] .= " target=\"_blank\"><img src=\"{$file['iconLink']}\">";
-				$docs[$key]['li'] .= "{$file['doc_name']}</a>&nbsp;";
+				$docs[$key]['li'] .= " target=\"_blank\">{$file['doc_name']}&nbsp;";
+				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\"></a>&nbsp;";
 			}
 			
 			else

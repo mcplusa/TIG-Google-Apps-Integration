@@ -82,7 +82,10 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 	
 	
 	require_once('/var/www/html/cms-custom/extensions/google_drive_connector/index.php');
+	
+	$docs_array = array();
 	$google_drive_mode = true;
+	
 	if ($google_drive_mode)
 	{
 		$auth_row = pikaAuth::getInstance()->getAuthRow();
@@ -142,6 +145,7 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 	}
 	
 	$docs = $doc_types = array();
+
 	foreach ($docs_array as $key => $file)
 	{
 		// Files		

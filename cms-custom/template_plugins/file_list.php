@@ -179,7 +179,7 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 				else
 				{
 					// A Google Docs file.
-					$docs[$key]['li'] = "<a href=\"{$file['selfLink']}\"><img src=\"{$file['iconLink']}\">";				
+					$docs[$key]['li'] = "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"><img src=\"{$file['iconLink']}\">";				
 				}
 			}
 			

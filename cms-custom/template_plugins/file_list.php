@@ -165,19 +165,10 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		{
 			if ($google_drive_mode)
 			{
-				if (array_key_exists('webContentLink', $file))
-				{
-					// A downloadable file (Word, PDF, JPG, etc.
-					$docs[$key]['li'] = "<a href=\"{$file['webContentLink']}\"><img src=\"{$file['iconLink']}\">";
-					$docs[$key]['li'] .= "{$file['doc_name']}</a>&nbsp;";
-				}
-				
-				else
-				{
-					// A Google Docs file.
-					$docs[$key]['li'] = "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"><img src=\"{$file['iconLink']}\">";							$docs[$key]['li'] .= "{$file['doc_name']}</a>&nbsp;";
-		
-				}
+				// AMW - This seems to work a lot better than using $file['webContentLink']
+				$docs[$key]['li'] = "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
+				$docs[$key]['li'] .= " target=\"_blank\"><img src=\"{$file['iconLink']}\">";
+				$docs[$key]['li'] .= "{$file['doc_name']}</a>&nbsp;";
 			}
 			
 			else

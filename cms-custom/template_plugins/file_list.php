@@ -169,56 +169,58 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 				{
 					// A downloadable file (Word, PDF, JPG, etc.
 					$docs[$key]['li'] = "<a href=\"{$file['webContentLink']}\"><img src=\"{$file['iconLink']}\">";
+					$docs[$key]['li'] .= "{$file['doc_name']}</a>&nbsp;";
 				}
 				
 				else
 				{
 					// A Google Docs file.
-					$docs[$key]['li'] = "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"><img src=\"{$file['iconLink']}\">";				
+					$docs[$key]['li'] = "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"><img src=\"{$file['iconLink']}\">";							$docs[$key]['li'] .= "{$file['doc_name']}</a>&nbsp;";
+		
 				}
 			}
 			
 			else
 			{
 				$docs[$key]['li'] = "<a href=\"{$base_url}/documents.php?doc_id={$file['doc_id']}&action=download\" target=\"_blank\">";
-			}
-
-			$docs[$key]['li'] .= "{$file['doc_name']}</a>&nbsp;";
-		
-			switch ($file['mime_type']) 
-            {
-                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                case 'application/vnd.openxmlformats-officedocument.word':
-                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                case 'application/vnd.openxmlformats-officedocument.spre':
-                case 'application/vnd.ms-excel':
-                case 'application/rtf':
-                case 'application/msword':
-                case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-                case 'application/vnd.openxmlformats-officedocument.pres':
-                case 'application/vnd.ms-powerpoint':
-
-	            if (preg_match('/MSIE/i', $_SERVER['HTTP_USER_AGENT']))
+				$docs[$key]['li'] .= "{$file['doc_name']}</a>&nbsp;";
+				switch ($file['mime_type']) 
 	            {
-	            	$safe_name = $file['doc_name'];
-	            	// AMW 2013-07-19 - Workaround for Cleveland docs with slashes in filename.
-	                $safe_name = str_replace("/", "_", $safe_name);
-	                // AMW - urlencode() needs to be run *after* str_replace().
-	                $safe_name = urlencode($safe_name);
-	                $docs[$key]['li'] .= "<a href=\"#\" onclick='new ActiveXObject(\"SharePoint.OpenDocuments.1\").EditDocument(\"{$server_name_and_port}/{$settings['db_name']}/{$file['doc_id']}/{$safe_name}\")'>[Edit Online]</a>";                    
-	            }
-	            
-	            else
-	            {
-	            	$docs[$key]['li'] .= "&nbsp;[Online edits only available with Internet Explorer]";
+	                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+	                case 'application/vnd.openxmlformats-officedocument.word':
+	                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+	                case 'application/vnd.openxmlformats-officedocument.spre':
+	                case 'application/vnd.ms-excel':
+	                case 'application/rtf':
+	                case 'application/msword':
+	                case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+	                case 'application/vnd.openxmlformats-officedocument.pres':
+	                case 'application/vnd.ms-powerpoint':
+	
+		            if (preg_match('/MSIE/i', $_SERVER['HTTP_USER_AGENT']))
+		            {
+		            	$safe_name = $file['doc_name'];
+		            	// AMW 2013-07-19 - Workaround for Cleveland docs with slashes in filename.
+		                $safe_name = str_replace("/", "_", $safe_name);
+		                // AMW - urlencode() needs to be run *after* str_replace().
+		                $safe_name = urlencode($safe_name);
+		                $docs[$key]['li'] .= "<a href=\"#\" onclick='new ActiveXObject(\"SharePoint.OpenDocuments.1\").EditDocument(\"{$server_name_and_port}/{$settings['db_name']}/{$file['doc_id']}/{$safe_name}\")'>[Edit Online]</a>";                    
+		            }
+		            
+		            else
+		            {
+		            	$docs[$key]['li'] .= "&nbsp;[Online edits only available with Internet Explorer]";
+					}
+	            			
+	
+	                break;
+	                
+	                default:
+	                break;
 				}
-            			
-
-                break;
-                
-                default:
-                break;
 			}
+
+		
 			
 			if(in_array($temp_args['mode'],array('select','edit_select')))
 			{

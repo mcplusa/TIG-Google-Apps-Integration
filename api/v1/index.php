@@ -554,7 +554,7 @@ if ('' == $api_request[sizeof($api_request) - 1])
 	array_pop($api_request);
 }
 
-if(implode('/',$api_request) != "drive/auth" && implode('/',$api_request) != "drive/unauthorize"){
+if(implode('/',$api_request) != "drive/auth" && implode('/',$api_request) != "drive/unauthorize" && implode('/',$api_request) != "drive/upload"){
 	// HTTP Authentication
 	if (!isset($_SERVER['PHP_AUTH_USER'])) 
 	{

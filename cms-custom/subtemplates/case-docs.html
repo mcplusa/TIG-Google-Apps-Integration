@@ -48,7 +48,14 @@
 		</td>
 		<td>
 			<h2 class="hdt">Document Storage</h2>
-			<iframe src="https://drive.google.com/embeddedfolderview?id=%%[google_drive_folder_id]%%#list" width="800" height="600" frameborder="0"></iframe>				
+			<iframe src="https://drive.google.com/embeddedfolderview?id=%%[google_drive_folder_id]%%#list" width="800" height="600" frameborder="0"></iframe>
+			<form method="post" enctype="multipart/form-data" action="/api/v1/drive/upload">
+			<input type="file" name="file_upload">
+			<input type="hidden" name="title" value="Test file">
+			<input type="hidden" name="folder_id" value="%%[google_drive_folder_id]%%">
+			<input type="submit" value="Upload">
+			</form>
+				
 						
 <!--
 			<form action="%%[base_url]%%/ops/upload_document.php" name="add_folder" method="POST">

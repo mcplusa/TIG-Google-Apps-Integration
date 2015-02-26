@@ -58,10 +58,11 @@ $C .= $template->draw();
 
 if (array_key_exists('tmp_name', $_FILES['file_upload']))
 {
-	
+	//var_dump($_FILES);
 	$rest = new PikaDrive($auth_row['username']);
 	
-	$y = $rest->uploadFile($_FILES['file_upload']['tmp_name'], 'Test File', $case1->google_drive_folder_id);  // $_POST['title'], $_POST['folder_id'])
+	$y = $rest->uploadFile($_FILES['file_upload']['tmp_name'], $_FILES['file_upload']['name'], $case1->google_drive_folder_id);  
+	// $_POST['title'], $_POST['folder_id'])
 	var_dump($y);
 	
 }

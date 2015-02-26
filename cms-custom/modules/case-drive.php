@@ -53,4 +53,19 @@ $template = new pikaTempLib('subtemplates/case-drive.html', $a);
 $C .= $template->draw();
 
 
+// Handle Drive uploads
+// TODO Move this elsewhere
+
+if (array_key_exists('tmp_name', $_FILES['file_upload']))
+{
+	
+	$rest = new PikaDrive($auth_row['username']);
+	
+	$y = $rest->uploadFile($_FILES['file_upload']['tmp_name'], 'Test File', $case1->google_drive_folder_id);  // $_POST['title'], $_POST['folder_id'])
+	var_dump($y);
+	
+}
+
+
+
 ?>

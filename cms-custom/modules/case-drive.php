@@ -34,6 +34,9 @@ function folder_search_or_create($folder_name, $parent_id)
 
 if (strlen($case1->google_drive_folder_id) == 0)
 {
+	// Reminder: It's not possible to search Google Drive if the current Pika CMS user
+	// account doesn't have a token.
+
 	// Examples:  '98765' becomes '765', '12' becomes '012'.
 	$case_sub_folder_name = str_pad(substr($case1->case_id, -3), 3, '0', STR_PAD_LEFT);	
 	// Look for the sub_folder where this case's folder will go.  If it doesn't
@@ -48,6 +51,50 @@ if (strlen($case1->google_drive_folder_id) == 0)
 
 $a = array('google_drive_folder_id' => $case1->google_drive_folder_id);
 // End Drive Section
+
+
+
+// Drive Upload Form
+// Only display this if the user has logged in using the API /drive/auth URL.
+
+// I don't have permission to edit pikaDrive on dev server at the moment, this
+// is a work around.
+//if (pikaDrive::isAuthenticated($auth_row["username"]))
+if (file_exists("/var/www/html/cms-custom/extensions/google_drive_connector/tokens/{$auth_row['username']}"))
+{
+	$C .= '
+	<form method="post" enctype="multipart/form-data" action="">
+	<div class="row">
+		<div class="span5">
+		<input type="file" name="file_upload">
+		<input type="hidden" name="folder_id" value="' . $case1->google_drive_folder_id . '">
+		<input type="submit" value="Upload">
+		</div>
+		<div class="span4">';
+
+	// Add a "Log out of Google Drive" button.
+	$C .= '<a class="btn btn-mini" title="Disconnect your Pika CMS account from Google Drive uploads" href="/api/v1/drive/unauthorize?username=' ;
+	$C .= htmlspecialchars($auth_row['username']);
+	$C .= '" target="_blank">X</a>';
+
+	$C .= '
+		</div>
+	</div>
+	</form>';
+
+}
+
+else
+{
+	$clean_username = htmlspecialchars($auth_row['username']);
+	
+	$C .= '<p>Please log your Pika CMS account into <a class="btn btn-mini"';
+	$C .= ' onClick=\'window.open("/api/v1/drive/auth?username='.$clean_username.'", "Request for Authorization", "width=600, height=400, scrollbars=yes");\'';
+	$C .= '>Google Drive</a> if you wish to upload documents to Drive through Pika CMS.';
+	$C .= '  Please reload this page once you\'ve logged in.</p>';
+}
+// End Drive Upload Form
+
 
 $template = new pikaTempLib('subtemplates/case-drive.html', $a);
 $C .= $template->draw();

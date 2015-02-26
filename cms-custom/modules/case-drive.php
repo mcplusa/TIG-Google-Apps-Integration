@@ -13,6 +13,7 @@ require_once('/var/www/html/cms-custom/extensions/google_drive_connector/index.p
 
 function folder_search_or_create($folder_name, $parent_id)
 {
+	$auth_row = pikaAuth::getInstance()->getAuthRow();
 	$drive = new PikaDrive($auth_row['username']);
 	$sub_folders = $drive->listFiles($parent_id);
 	
@@ -30,6 +31,22 @@ function folder_search_or_create($folder_name, $parent_id)
 	$z = $drive->createFolder($folder_name, $parent_id);
 	return $z['id'];
 }
+
+if (strlen($case1->google_drive_folder_id) == 0 && !file_exists("/var/www/html/cms-custom/extensions/google_drive_connector/tokens/{$auth_row['username']}"))
+{
+	// Bail out to prevent errors when folder_search_or_create is run.
+	$clean_username = htmlspecialchars($auth_row['username']);
+	
+	$C .= '<p>This case does not have a Google Drive folder.  Please log your Pika CMS account into <a class="btn btn-mini"';
+	$C .= ' onClick=\'window.open("/api/v1/drive/auth?username='.$clean_username.'", "Request for Authorization", "width=600, height=400, scrollbars=yes");\'';
+	$C .= '>Google Drive</a> and Pika CMS will create one.';
+	$C .= '  Please reload this page once you\'ve logged in.</p>';
+	
+}
+
+else
+{
+
 
 
 if (strlen($case1->google_drive_folder_id) == 0)
@@ -110,6 +127,7 @@ if (array_key_exists('file_upload', $_FILES))
 	// $_POST['title'], $_POST['folder_id'])	
 }
 
+}
 
 
 ?>

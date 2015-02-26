@@ -56,7 +56,7 @@ $C .= $template->draw();
 // Handle Drive uploads
 // TODO Move this elsewhere
 
-if (array_key_exists('tmp_name', $_FILES['file_upload']))
+if (array_key_exists('file_upload', $_FILES))
 {
 	//var_dump($_FILES);
 	$rest = new PikaDrive($auth_row['username']);

@@ -37,43 +37,53 @@
       $this->mail->addReplyTo($from, $name);
     }
 
-    function generateEmailContent($caseNumber, $caseLink, $beginDate, $endDate){
+    function generateEmailContent($v, $beginDate, $endDate){
+      global $CalendarSubject;
+
       date_default_timezone_set('UTC');
       $beginDate = date("Ymd\THis\Z", $beginDate);
       $endDate = date("Ymd\THis\Z", $endDate);
 
+      $calendarSubject = replaceVars($CalendarSubject, $v);
+
       $url = "http://www.google.com/calendar/event?action=TEMPLATE".
-              "&text={$caseNumber}".
+              "&text={$calendarSubject}".
               "&dates={$beginDate}/{$endDate}".
-              "&details={$caseLink}";
+              "&details={$v['case_link']}";
 
-      $keys = array(
-          '%eventUrl%',
-          '%case%',
-          '%caseLink%'
-      );
-      $values = array(
-          $url,
-          $caseNumber,
-          $caseLink
-      );
+      $msg = replaceVars(file_get_contents(dirname(__FILE__).'/contents.html'), $v);
 
-      $this->msg = str_replace($keys,$values,file_get_contents(dirname(__FILE__).'/contents.html'));
+      $this->msg = str_replace('%eventUrl%',$url, $msg);
     }
 
     function formatSubject($v){
       global $EmailSubject;
 
+      $this->subject = replaceVars($EmailSubject, $v);
+    }
+
+    function replaceVars($str, $v){
       $keys = array(
           '%case%',
-          '%client%'
+          '%clientLastName%',
+          '%clientFirstName%',
+          '%subject%',
+          '%user%',
+          '%caseLink%'
       );
+
+      $c = preg_split('/\s+/', trim($v['client_name']));
 
       $values = array(
           $v['case_number'],
-          $v['client_name']
+          array_pop($c),
+          array_shift($c),
+          $v['summary'],
+          '',
+          $v['case_link']
       );
-      $this->subject = str_replace($keys,$values,$EmailSubject);
+
+      return str_replace($keys,$values,$str);
     }
 
     function config(){

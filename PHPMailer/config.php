@@ -3,7 +3,8 @@
   $SMTPConfig['user'] = "";
   $SMTPConfig['password'] = "";
   
-  $EmailSubject = "Testing subject %case%";
+  $EmailSubject = "Tickler Notification - %clientLastName%";
+  $CalendarSubject = "%clientLastName% - %subject% (%user%)";
 
   $FromConfig['mail'] = "no-reply@pikasoftware.com";
   $FromConfig['name'] = "Pika Software";

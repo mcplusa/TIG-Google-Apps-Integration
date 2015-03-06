@@ -285,7 +285,32 @@ padding-top: 10px;">';
 				$js_folder_id = $file['doc_id'];
 			}
 			
-			$docs[$key]['li'] = "<a onClick=\"fileList('{$field_name}','{$js_folder_id}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">{$file['doc_name']}</a>&nbsp;";
+			$docs[$key]['li'] = '';
+			$docs[$key]['li'] .= '<div style="background-color#hover: rgb(238, 238, 238);
+border-bottom-color: rgb(221, 221, 221);
+border-bottom-style: solid;
+border-bottom-width: 1px;
+clear: both;
+display: block;
+font-family: Arial, sans-serif;
+height: 20px;
+margin-left: 15px;
+margin-right: 20px;
+outline-color: rgb(0, 0, 0);
+outline-style: none;
+outline-width: 0px;
+padding-bottom: 7px;
+padding-left: 5px;
+padding-top: 10px;">';
+			$docs[$key]['li'] .= '<div style="font-size: 13px; height: 15px; margin-left: 15px; max-width: 369px; overflow-x: hidden; overflow-y: hidden; text-overflow: ellipsis; white-space: nowrap; width: 351px; display:inline-block;">';
+			// AMW - This seems to work a lot better than using $file['webContentLink']
+			$docs[$key]['li'] = "<a onClick=\"fileList('{$field_name}','{$js_folder_id}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">";
+			$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\">";
+			$docs[$key]['li'] .= "{$file['doc_name']}</a>";
+			$docs[$key]['li'] .= '</div><div style="display:inline-block;">';
+			$docs[$key]['li'] .= "{$file_date} <span style=\"color: rgb(119, 119, 119);\">{$file['ownerNames'][0]}</span>";
+			$docs[$key]['li'] .= "</div></div>";
+			
 			
 			if($temp_args['mode'] != 'select' && !$google_drive_mode)
 			{
@@ -295,7 +320,7 @@ padding-top: 10px;">';
 									<a href=\"\" onClick=\"confirmDeleteFile('{$field_name}','{$file['folder_ptr']}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}','{$file['doc_id']}');return false;\">Delete</a>
 									)</span>";
 			}	
-			$docs[$key]['li_class'] = "directory";
+			$docs[$key]['li_class'] = "directoryz";
 		}
 		
 	}

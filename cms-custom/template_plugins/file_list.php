@@ -28,7 +28,7 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		'folder_id_hidden' => false, // Hidden current_folder field (for folder selection)
 		'doc_id_hidden' => false, // Hidden current doc_id field (for document selection)
 		'div' => true,
-		'width' => '325',
+		'width' => '825',
 		'height' => '525',
 		'class' => '',
 		// Mode (edit/select/edit_select)
@@ -167,12 +167,32 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			if ($google_drive_mode)
 			{
 				$file_date = date('M d', strtotime($file['modifiedDate']));
+				$docs[$key]['li'] = '';
+				$docs[$key]['li'] .= '<div style="background-color#hover: rgb(238, 238, 238);
+border-bottom-color: rgb(221, 221, 221);
+border-bottom-style: solid;
+border-bottom-width: 1px;
+clear: both;
+display: block;
+font-family: Arial, sans-serif;
+height: 20px;
+margin-left: 15px;
+margin-right: 20px;
+outline-color: rgb(0, 0, 0);
+outline-style: none;
+outline-width: 0px;
+padding-bottom: 7px;
+padding-left: 5px;
+padding-top: 10px;">';
+				$docs[$key]['li'] .= '<div style="font-size: 13px; height: 15px; margin-left: 15px; max-width: 369px; overflow-x: hidden; overflow-y: hidden; text-overflow: ellipsis; white-space: nowrap; width: 351px; display:inline-block;">';
 				// AMW - This seems to work a lot better than using $file['webContentLink']
-				$docs[$key]['li'] = "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
+				$docs[$key]['li'] .= "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
 				$docs[$key]['li'] .= " target=\"_blank\">";
 				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\"></a>&nbsp;";
 				$docs[$key]['li'] .= "{$file['doc_name']}&nbsp;";
-				$docs[$key]['li'] .= "{$file_date}&nbsp;{$file['ownerNames'][0]}";
+				$docs[$key]['li'] .= '</div><div style="display:inline-block;">';
+				$docs[$key]['li'] .= "{$file_date} <span style=\"color: rgb(119, 119, 119);\">{$file['ownerNames'][0]}</span>";
+				$docs[$key]['li'] .= "</div></div>";
 				//var_dump($file);
 				
 			}

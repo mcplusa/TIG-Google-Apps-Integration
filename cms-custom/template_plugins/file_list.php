@@ -249,7 +249,7 @@ padding-top: 10px;">';
 				$docs[$key]['li'] = pikaTempLib::plugin('radio','form_id_radio',null,array($file['doc_id'] => $file['doc_name']),array("id={$uid}","onclick=updateCurrentDoc('{$temp_args['doc_field']}','{$file['doc_id']}');")) . "&nbsp;";
 				//$docs[$key]['li'] = "<a href=\"\" onClick=\"updateCurrentDocument('{$temp_args['doc_field']}','{$file['doc_id']}');\">{$file['doc_name']}</a>&nbsp;";
 			}
-			$docs[$key]['li'] .= "<img id=\"{$file['doc_id']}_pointer\" title=\"More Info\" src='{$base_url}/images/pointer.gif' onClick='setDescription({$file['doc_id']})'>";
+			//$docs[$key]['li'] .= "<img id=\"{$file['doc_id']}_pointer\" title=\"More Info\" src='{$base_url}/images/pointer.gif' onClick='setDescription({$file['doc_id']})'>";
 			
 			$doc_size = pikaDocument::format_bytes($file['doc_size']);
 			$description = array();

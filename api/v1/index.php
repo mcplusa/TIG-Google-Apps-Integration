@@ -406,7 +406,10 @@ class restCaseList extends restResourceList
 
 		if (($safe_q) || ($safe_u))
 		{
-			$extra_sql = " WHERE number LIKE '%{$safe_q}%'";
+			$extra_sql = " WHERE ( ";
+			$extra_sql.= " number LIKE '%{$safe_q}%' ";
+			$extra_sql.= " OR CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) LIKE '%{$safe_q}%' ";
+			$extra_sql.= " ) ";
 			if($safe_u)
 				$extra_sql.= " and users.username = '{$safe_u}'";
 		}

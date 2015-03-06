@@ -188,8 +188,8 @@ padding-top: 10px;">';
 				// AMW - This seems to work a lot better than using $file['webContentLink']
 				$docs[$key]['li'] .= "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
 				$docs[$key]['li'] .= " target=\"_blank\">";
-				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\"></a>&nbsp;";
-				$docs[$key]['li'] .= "{$file['doc_name']}&nbsp;";
+				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\">";
+				$docs[$key]['li'] .= "{$file['doc_name']}</a>";
 				$docs[$key]['li'] .= '</div><div style="display:inline-block;">';
 				$docs[$key]['li'] .= "{$file_date} <span style=\"color: rgb(119, 119, 119);\">{$file['ownerNames'][0]}</span>";
 				$docs[$key]['li'] .= "</div></div>";

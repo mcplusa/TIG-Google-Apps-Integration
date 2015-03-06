@@ -247,7 +247,7 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 									
 						
 			$docs[$key]['li'] .= pikaTempLib::plugin('ul','','',array($description),array('ul_class=pika_files'));
-			$docs[$key]['li_class'] = "file";
+			$docs[$key]['li_class'] = "filez";
 			
 			
 		}

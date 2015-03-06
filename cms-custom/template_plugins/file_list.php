@@ -94,8 +94,9 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		//if (pikaDrive::isAuthenticated($auth_row["username"]))
 		if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/tokens/' . $auth_row['username']))
 		{
+			$folder_id = $data_array['google_drive_folder_id'];
 			$pika = new PikaDrive($auth_row["username"]);
-			$filez = $pika->listFiles(pl_grab_get('folder_ptr', null));
+			$filez = $pika->listFiles($folder_id);
 			$docs_array = array();
 			//var_dump($filez); exit();
 			

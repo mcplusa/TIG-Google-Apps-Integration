@@ -166,10 +166,15 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		{
 			if ($google_drive_mode)
 			{
+				$file_date = date('M d', strtotime($file['modifiedDate']));
 				// AMW - This seems to work a lot better than using $file['webContentLink']
 				$docs[$key]['li'] = "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
-				$docs[$key]['li'] .= " target=\"_blank\">{$file['doc_name']}&nbsp;";
+				$docs[$key]['li'] .= " target=\"_blank\">";
 				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\"></a>&nbsp;";
+				$docs[$key]['li'] .= "{$file['doc_name']}&nbsp;";
+				$docs[$key]['li'] .= "{$file_date}&nbsp;{$file['ownerNames'][0]}";
+				//var_dump($file);
+				
 			}
 			
 			else

@@ -275,7 +275,18 @@ padding-top: 10px;">';
 		// Folders
 		elseif($file['folder'] == 1)
 		{
-			$docs[$key]['li'] = "<a onClick=\"fileList('{$field_name}','{$file['doc_id']}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">{$file['doc_name']}</a>&nbsp;";
+			if ($google_drive_mode)
+			{
+				$js_folder_id = $file['id'];
+			}
+			
+			else
+			{
+				$js_folder_id = $file['doc_id'];
+			}
+			
+			$docs[$key]['li'] = "<a onClick=\"fileList('{$field_name}','{$js_folder_id}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">{$file['doc_name']}</a>&nbsp;";
+			
 			if($temp_args['mode'] != 'select' && !$google_drive_mode)
 			{
 				$docs[$key]['li'] .= "<span class='folder_actions'>

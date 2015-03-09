@@ -167,7 +167,14 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			{
 				$file_date = date('M d', strtotime($file['modifiedDate']));
 				$docs[$key]['li'] = '';
+				/*
+				$docs[$key]['li'] .= "<a href=\"{$file['selfLink']}\">X</a>";
+				$docs[$key]['li'] .= "<a href=\"{$file['webContentLink']}\">X</a>";
+				*/
+				$docs[$key]['li'] .= "<a href=\"{$file['alternateLink']}\"";
+				/*
 				$docs[$key]['li'] .= "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
+				*/
 				$docs[$key]['li'] .= " target=\"_blank\">";
 				$docs[$key]['li'] .= '<div style="" class="drive-row">';
 				$docs[$key]['li'] .= '<div style="" class="drive-info">';

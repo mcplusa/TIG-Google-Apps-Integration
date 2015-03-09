@@ -28,9 +28,9 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		'folder_id_hidden' => false, // Hidden current_folder field (for folder selection)
 		'doc_id_hidden' => false, // Hidden current doc_id field (for document selection)
 		'div' => true,
-		'width' => '825',
-		'height' => '525',
-		'class' => '',
+		'width' => '625',
+		'height' => '825',
+		'class' => 'drive-main',
 		// Mode (edit/select/edit_select)
 		'mode' => 'edit'
 	);
@@ -361,7 +361,7 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			$div_id = " id=\"{$temp_args['id']}\"";
 		}
 		
-		$file_list_output = "<div{$class}{$div_id} style=\"background-color:#FFFFFF;{$width}{$height}border:1px black solid;overflow:auto;\">"
+		$file_list_output = "<div{$class}{$div_id} style=\"{$width}{$height}overflow:auto;\">"
 							. $file_list_output . "</div>";
 							
 		if($temp_args['folder_id_hidden']) 

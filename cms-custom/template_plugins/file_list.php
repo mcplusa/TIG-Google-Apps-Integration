@@ -188,7 +188,7 @@ padding-top: 10px;">';
 				// AMW - This seems to work a lot better than using $file['webContentLink']
 				$docs[$key]['li'] .= "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
 				$docs[$key]['li'] .= " target=\"_blank\">";
-				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\">";
+				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\">&nbsp;";
 				$docs[$key]['li'] .= "{$file['doc_name']}</a>";
 				$docs[$key]['li'] .= '</div><div style="display:inline-block;">';
 				$docs[$key]['li'] .= "{$file_date} <span style=\"color: rgb(119, 119, 119);\">{$file['ownerNames'][0]}</span>";
@@ -304,7 +304,7 @@ padding-left: 5px;
 padding-top: 10px;">';
 			$docs[$key]['li'] .= '<div style="font-size: 13px; height: 15px; margin-left: 15px; max-width: 369px; overflow-x: hidden; overflow-y: hidden; text-overflow: ellipsis; white-space: nowrap; width: 351px; display:inline-block;">';
 			// AMW - This seems to work a lot better than using $file['webContentLink']
-			$docs[$key]['li'] = "<a onClick=\"fileList('{$field_name}','{$js_folder_id}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">";
+			$docs[$key]['li'] .= "<a onClick=\"fileList('{$field_name}','{$js_folder_id}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">";
 			$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\">";
 			$docs[$key]['li'] .= "{$file['doc_name']}</a>";
 			$docs[$key]['li'] .= '</div><div style="display:inline-block;">';

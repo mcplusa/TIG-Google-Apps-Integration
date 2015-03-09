@@ -557,7 +557,7 @@ if ('' == $api_request[sizeof($api_request) - 1])
 	array_pop($api_request);
 }
 
-if(implode('/',$api_request) != "drive/auth"){
+if(implode('/',$api_request) != "drive/auth" && implode('/',$api_request) != "drive/unauthorize" && implode('/',$api_request) != "drive/upload"){
 	// HTTP Authentication
 	if (!isset($_SERVER['PHP_AUTH_USER'])) 
 	{
@@ -801,7 +801,7 @@ else if ('drive' == $api_request[0]){
 					break;
 
 				case 'upload':
-					echo json_encode($rest->uploadFile($_FILES['upfile']['tmp_name'], $_POST['file_name'], $_POST['folder_id']));
+					echo json_encode($rest->uploadFile($_FILES['file_upload']['tmp_name'], $_POST['title'], $_POST['folder_id']));
 					break;
 
 				case 'new_folder':
@@ -809,7 +809,7 @@ else if ('drive' == $api_request[0]){
 					break;
 
 				case 'unauthorize':
-					$rest->unauthorize($username);
+					$rest->unauthorize(htmlspecialchars($_GET['username']));
 					break;
 
 				default:

@@ -1,0 +1,64 @@
+<table class="nopad" summary="">
+	<tr valign="top">
+		<td width="50%">
+			<h2 class="hdt">Case Intake Report</h2>
+			<form action="%%[base_url]%%/legacy_report.php?report=case_print&dummy=dummy.pdf" method="post" name='case_intake' target='_blank'>
+			<p>
+				<input type="hidden" name="report" value="case_print"/>
+				<input type="hidden" name="case_id" value="%%[case_id]%%"/>
+				<input type="checkbox" name="info" value="1" checked class="plcheck" tabindex="1"/>Case Info 
+				<input type="checkbox" name="notes" value="1" checked class="plcheck" tabindex="1"/>Case Notes &nbsp; 
+				<input type="submit" value="Generate Report" tabindex="1"/>
+			</p>
+			</form>
+			
+			<form action="%%[base_url]%%/ops/docgen.php" method="post" name="docgen">
+			<h2 class="hdt">Document Assembly</h2>
+			%%[forms,file_list,doc_type=F,mode=select,doc_field=form_id]%%
+			%%[form_id,input_hidden]%%
+			<table class="nopad">
+				<tr>
+					<td>
+			<p class="side">
+				Form Recipient:<br/>
+				%%[recipient,case_contacts_menu,show_pba]%%<br/>
+				Client Name:<br/>
+				%%[client,case_contacts_menu,relation_code=1]%%<br/>
+				</td>
+				<td>
+				<p class="side">
+				Opposing Party:<br/>
+				%%[opposing,case_contacts_menu,relation_code=2,first_value]%%<br/>
+				Opposing Counsel:<br/>
+				%%[opp_counsel,case_contacts_menu,relation_code=3,first_value]%%
+			</p>
+			</td>
+			</tr>
+			</table>
+			<p>
+				<input type="checkbox" id="autosave" name="autosave"><label for="autosave">Save a copy in Document Storage</label>
+			</p>
+			<p>
+				<input type="hidden" name="case_id" value="%%[case_id]%%"/>
+				<input type="hidden" name="debug" value="0"/>
+				<input type="submit" value="Make New Doc" tabindex="1" onclick="if(isEmpty(form_id)) { alert('Please select a form.'); return false;}"/>
+				<a onclick="document.docgen.debug.value=1;document.docgen.submit();">[?]</a>
+			</p>
+			</form>
+		</td>
+		<td>
+		</td>
+	</tr>
+</table>
+
+<script type="text/javascript">
+function isEmpty(field) {
+   if ((field.value.length==0) || (field.value==null)) {
+      return true;
+   } else { return false; }
+}
+//-->
+</script>
+
+%%[ajax_init.js,javascript]%%
+%%[file_list.js,javascript,parse]%%

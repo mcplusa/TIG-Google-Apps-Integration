@@ -1,5 +1,5 @@
 <?php 
-
+session_start();
 
 /*** WARNING:  I haven't added authentication yet, until it's
 	added, this script makes your data available to anyone.
@@ -133,7 +133,7 @@ function get_value_numeric($field)
 function next_id($sequence)
 {
 	// VARIABLES
-	$safe_sequence = mysql_escape_string($sequence);
+	$safe_sequence = mysql_real_escape_string($sequence);
 	$next_id = null;
 	
 	mysql_query("LOCK TABLES counters WRITE") or trigger_error('counters table lock failed');
@@ -393,13 +393,16 @@ class restResourceList extends restResource
 class restCaseList extends restResourceList 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, open_date, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id";
+	protected $get_sql = "SELECT case_id, number AS case_number, open_date, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate, google_drive_folder_id FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id";
 	
-	function get()
+	function get($dummy_not_used = '')
 	{
 		$extra_sql = '';
 		$safe_q = get_value('q');
-		$safe_u = get_value('u');
+		$safe_u = "";
+		if(!isset($_GET['allCases'])){
+			$safe_u = $_SERVER['PHP_AUTH_USER'];
+		}
 
 		if (($safe_q) || ($safe_u))
 		{
@@ -419,7 +422,7 @@ class restCaseList extends restResourceList
 class restCase extends restResource 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id WHERE case_id=";
+	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate, google_drive_folder_id FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id WHERE case_id=";
 	protected $data_fields = 'case_id, number, status';
 
 	function post_values()
@@ -427,6 +430,20 @@ class restCase extends restResource
 		$x = post_value('case_number') . ', 1';
 		
 		return $x;
+	}
+	
+	function put()
+	{
+		$x = file_get_contents("php://input");
+		$y = json_decode($x, TRUE);
+		$z = mysql_real_escape_string($y['google_drive_folder_id']);
+		$sql = "UPDATE {$this->table} SET google_drive_folder_id = '{$z}'"; 
+		$sql .= " WHERE case_id = " . mysql_real_escape_string($this->id);		
+		$result = mysql_query($sql) or server_error(mysql_error($result));
+		
+		$this->transmitJson();
+		
+		return;
 	}
 }
 
@@ -439,7 +456,7 @@ class restCaseNoteList extends restResourceList
 	protected $table = 'activities';
 	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, activities.notes AS notes, hours, CONCAT(users.last_name, ', ', users.first_name) AS staff, funding AS funding_source FROM activities LEFT JOIN users ON activities.user_id=users.user_id WHERE case_id IS NOT NULL";
 	
-	function get()
+	function get($dummy_not_used = '')
 	{
 		$extra_sql = '';
 		$safe_case_id = get_value_numeric('case_id');
@@ -513,40 +530,6 @@ if (mysql_num_rows($result) != 1)
 */
 
 
-// HTTP Authentication
-if (!isset($_SERVER['PHP_AUTH_USER'])) 
-{
-    
-    header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
-    header('HTTP/1.0 204 No Content');
-    echo 'HTTP/1.0 204 No Content';
-    exit;
-}
-
-else if (!isset($_SERVER['PHP_AUTH_PW'])) 
-{
-	header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
-	header('HTTP/1.0 401 Unauthorized');
-	exit();
-}
-
-else 
-{
-	$safe_username = mysql_real_escape_string($_SERVER['PHP_AUTH_USER']);
-	$safe_password_hash = mysql_real_escape_string(md5($_SERVER['PHP_AUTH_PW']));
-	
-	$sql = "SELECT user_id FROM users WHERE enabled=1 AND username='{$safe_username}' AND password='{$safe_password_hash}'";
-	$result = mysql_query($sql) or server_error("An error was encountered.");
-	
-	if (mysql_num_rows($result) != 1)
-	{
-		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
-		header('HTTP/1.0 401 Unauthorized');
-		exit();
-	}
-}
-
-
 // Main code
 $question_position = strpos($_SERVER['REQUEST_URI'], '?');
 if ($question_position)
@@ -569,6 +552,41 @@ array_shift($api_request);  //  Remove 'v1/'
 if ('' == $api_request[sizeof($api_request) - 1])
 {
 	array_pop($api_request);
+}
+
+if(implode('/',$api_request) != "drive/auth" && implode('/',$api_request) != "drive/unauthorize" && implode('/',$api_request) != "drive/upload"){
+	// HTTP Authentication
+	if (!isset($_SERVER['PHP_AUTH_USER'])) 
+	{
+	    
+	    header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
+	    header('HTTP/1.0 204 No Content');
+	    echo 'HTTP/1.0 204 No Content';
+	    exit;
+	}
+
+	else if (!isset($_SERVER['PHP_AUTH_PW'])) 
+	{
+		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
+		header('HTTP/1.0 401 Unauthorized');
+		exit();
+	}
+
+	else 
+	{
+		$safe_username = mysql_real_escape_string($_SERVER['PHP_AUTH_USER']);
+		$safe_password_hash = mysql_real_escape_string(md5($_SERVER['PHP_AUTH_PW']));
+		
+		$sql = "SELECT user_id FROM users WHERE enabled=1 AND username='{$safe_username}' AND password='{$safe_password_hash}'";
+		$result = mysql_query($sql) or server_error("An error was encountered.");
+		
+		if (mysql_num_rows($result) != 1)
+		{
+			header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
+			header('HTTP/1.0 401 Unauthorized');
+			exit();
+		}
+	}
 }
 
 /*
@@ -748,13 +766,62 @@ else if ('casenotes' == $api_request[0])
 	}
 }
 
+else if ('drive' == $api_request[0]){
+	$driveExtensionPath = '../../' . $site_folder_name . '-custom/extensions/google_drive_connector/index.php';
+
+	if(!file_exists($driveExtensionPath)){
+		http_response_code(405);
+	}else{
+		require_once $driveExtensionPath;
+
+		$username = "";
+		if(isset($_SERVER['PHP_AUTH_USER'])){
+			$username = $_SERVER['PHP_AUTH_USER'];
+		}
+
+		$rest = new PikaDrive($username);
+
+		if(!isset($api_request[1])){
+			if($rest->check())
+				echo "authorized";
+		}else {
+			switch ($api_request[1]) {
+				case 'auth':
+					if(isset($_GET['code'])){
+						$rest->setToken($_SESSION['username'], $_GET['code']);
+						unset($_SESSION['username']);
+						echo "<script>window.close();</script>";
+					}else{
+						$_SESSION['username'] = get_value('username');
+						$rest->authenticate();
+					}
+					break;
+
+				case 'upload':
+					echo json_encode($rest->uploadFile($_FILES['file_upload']['tmp_name'], $_POST['title'], $_POST['folder_id']));
+					break;
+
+				case 'new_folder':
+					echo json_encode($rest->createFolder($_POST['folder_name']));
+					break;
+
+				case 'unauthorize':
+					$rest->unauthorize(htmlspecialchars($_GET['username']));
+					break;
+
+				default:
+					break;
+			}
+		}
+	}
+}
+
 else
 {
 	http_response_code(400);  // BAD REQUEST
 }
 
 exit();
-
 
 switch($api_request[0]) 
 {

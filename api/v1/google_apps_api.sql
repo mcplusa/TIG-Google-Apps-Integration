@@ -1,0 +1,1 @@
+ALTER TABLE cases ADD COLUMN google_drive_folder_id VARCHAR(255);

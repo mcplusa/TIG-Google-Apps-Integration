@@ -173,12 +173,12 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 				*/
 				$docs[$key]['li'] .= "<a href=\"{$file['alternateLink']}\"";
 				/*
+				// AMW - This seems to work a lot better than using $file['webContentLink']
 				$docs[$key]['li'] .= "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
 				*/
 				$docs[$key]['li'] .= " target=\"_blank\">";
 				$docs[$key]['li'] .= '<div style="" class="drive-row">';
 				$docs[$key]['li'] .= '<div style="" class="drive-info">';
-				// AMW - This seems to work a lot better than using $file['webContentLink']
 				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\" class=\"drive-icon\">";
 				$docs[$key]['li'] .= "{$file['doc_name']}";
 				$docs[$key]['li'] .= '</div><div style="" class="drive-last-modified">';

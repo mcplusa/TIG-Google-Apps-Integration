@@ -72,7 +72,6 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 	
 		
 	
-	
 	$file_list_output .= "<table width=\"100%\" class=\"nopad\" cellspacing=\"0\" cellpadding=\"0\">";
 	$file_list_output .= "<tr><th><a href=\"\" onClick=\"fileList('{$field_name}','0','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">{$doc_type_description}</a></th></tr><tr><td style='padding-left: 20px;padding-top: 3px;'>";
 	
@@ -168,29 +167,14 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			{
 				$file_date = date('M d', strtotime($file['modifiedDate']));
 				$docs[$key]['li'] = '';
-				$docs[$key]['li'] .= '<div style="background-color#hover: rgb(238, 238, 238);
-border-bottom-color: rgb(221, 221, 221);
-border-bottom-style: solid;
-border-bottom-width: 1px;
-clear: both;
-display: block;
-font-family: Arial, sans-serif;
-height: 20px;
-margin-left: 15px;
-margin-right: 20px;
-outline-color: rgb(0, 0, 0);
-outline-style: none;
-outline-width: 0px;
-padding-bottom: 7px;
-padding-left: 5px;
-padding-top: 10px;">';
-				$docs[$key]['li'] .= '<div style="font-size: 13px; height: 15px; margin-left: 15px; max-width: 369px; overflow-x: hidden; overflow-y: hidden; text-overflow: ellipsis; white-space: nowrap; width: 351px; display:inline-block;">';
+				$docs[$key]['li'] .= '<div style="" class="drive-row">';
+				$docs[$key]['li'] .= '<div style="" class="drive-info">';
 				// AMW - This seems to work a lot better than using $file['webContentLink']
 				$docs[$key]['li'] .= "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
 				$docs[$key]['li'] .= " target=\"_blank\">";
-				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\">&nbsp;";
+				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\" class=\"drive-icon\">";
 				$docs[$key]['li'] .= "{$file['doc_name']}</a>";
-				$docs[$key]['li'] .= '</div><div style="display:inline-block;">';
+				$docs[$key]['li'] .= '</div><div style="" class="drive-last-modified">';
 				$docs[$key]['li'] .= "{$file_date} <span style=\"color: rgb(119, 119, 119);\">{$file['ownerNames'][0]}</span>";
 				$docs[$key]['li'] .= "</div></div>";
 				//var_dump($file);
@@ -286,28 +270,13 @@ padding-top: 10px;">';
 			}
 			
 			$docs[$key]['li'] = '';
-			$docs[$key]['li'] .= '<div style="background-color#hover: rgb(238, 238, 238);
-border-bottom-color: rgb(221, 221, 221);
-border-bottom-style: solid;
-border-bottom-width: 1px;
-clear: both;
-display: block;
-font-family: Arial, sans-serif;
-height: 20px;
-margin-left: 15px;
-margin-right: 20px;
-outline-color: rgb(0, 0, 0);
-outline-style: none;
-outline-width: 0px;
-padding-bottom: 7px;
-padding-left: 5px;
-padding-top: 10px;">';
-			$docs[$key]['li'] .= '<div style="font-size: 13px; height: 15px; margin-left: 15px; max-width: 369px; overflow-x: hidden; overflow-y: hidden; text-overflow: ellipsis; white-space: nowrap; width: 351px; display:inline-block;">';
+			$docs[$key]['li'] .= '<div style="" class="drive-row">';
+			$docs[$key]['li'] .= '<div style="" class="drive-info">';
 			// AMW - This seems to work a lot better than using $file['webContentLink']
-			$docs[$key]['li'] .= "<a onClick=\"fileList('{$field_name}','{$js_folder_id}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">";
-			$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\">";
+			$docs[$key]['li'] .= "<a onClick=\"fileList('{$field_name}','{$js_folder_id}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\" class=\"drive-link\">";
+			$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\" class=\"drive-icon\">";
 			$docs[$key]['li'] .= "{$file['doc_name']}</a>";
-			$docs[$key]['li'] .= '</div><div style="display:inline-block;">';
+			$docs[$key]['li'] .= '</div><div style="" class="drive-last-modified">';
 			$docs[$key]['li'] .= "{$file_date} <span style=\"color: rgb(119, 119, 119);\">{$file['ownerNames'][0]}</span>";
 			$docs[$key]['li'] .= "</div></div>";
 			

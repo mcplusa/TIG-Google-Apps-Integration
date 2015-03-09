@@ -802,7 +802,6 @@ else if ('drive' == $api_request[0]){
 
 				case 'upload':
 					echo json_encode($rest->uploadFile($_FILES['upfile']['tmp_name'], $_POST['file_name'], $_POST['folder_id']));
-					echo json_encode($rest->uploadFile($_FILES['file_upload']['tmp_name'], $_POST['title'], $_POST['folder_id']));
 					break;
 
 				case 'new_folder':

@@ -167,16 +167,16 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			{
 				$file_date = date('M d', strtotime($file['modifiedDate']));
 				$docs[$key]['li'] = '';
+				$docs[$key]['li'] .= "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
+				$docs[$key]['li'] .= " target=\"_blank\">";
 				$docs[$key]['li'] .= '<div style="" class="drive-row">';
 				$docs[$key]['li'] .= '<div style="" class="drive-info">';
 				// AMW - This seems to work a lot better than using $file['webContentLink']
-				$docs[$key]['li'] .= "<a href=\"https://drive.google.com/open?id={$file['id']}&authuser=0\"";
-				$docs[$key]['li'] .= " target=\"_blank\">";
 				$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\" class=\"drive-icon\">";
-				$docs[$key]['li'] .= "{$file['doc_name']}</a>";
+				$docs[$key]['li'] .= "{$file['doc_name']}";
 				$docs[$key]['li'] .= '</div><div style="" class="drive-last-modified">';
 				$docs[$key]['li'] .= "{$file_date} <span style=\"color: rgb(119, 119, 119);\">{$file['ownerNames'][0]}</span>";
-				$docs[$key]['li'] .= "</div></div>";
+				$docs[$key]['li'] .= "</div></div></a>";
 				//var_dump($file);
 				
 			}
@@ -270,15 +270,15 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			}
 			
 			$docs[$key]['li'] = '';
-			$docs[$key]['li'] .= '<div style="" class="drive-row">';
-			$docs[$key]['li'] .= '<div style="" class="drive-info">';
 			// AMW - This seems to work a lot better than using $file['webContentLink']
 			$docs[$key]['li'] .= "<a onClick=\"fileList('{$field_name}','{$js_folder_id}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\" class=\"drive-link\">";
+			$docs[$key]['li'] .= '<div style="" class="drive-row">';
+			$docs[$key]['li'] .= '<div style="" class="drive-info">';
 			$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\" class=\"drive-icon\">";
-			$docs[$key]['li'] .= "{$file['doc_name']}</a>";
+			$docs[$key]['li'] .= "{$file['doc_name']}";
 			$docs[$key]['li'] .= '</div><div style="" class="drive-last-modified">';
 			$docs[$key]['li'] .= "{$file_date} <span style=\"color: rgb(119, 119, 119);\">{$file['ownerNames'][0]}</span>";
-			$docs[$key]['li'] .= "</div></div>";
+			$docs[$key]['li'] .= "</div></div></a>";
 			
 			
 			if($temp_args['mode'] != 'select' && !$google_drive_mode)

@@ -393,7 +393,7 @@ class restResourceList extends restResource
 class restCaseList extends restResourceList 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, open_date, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate, google_drive_folder_id FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id";
+	protected $get_sql = "SELECT case_id, number AS case_number, open_date, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate, google_drive_folder_id FROM users loggedUser, cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id";
 	
 	function get($dummy_not_used = '')
 	{
@@ -404,11 +404,14 @@ class restCaseList extends restResourceList
 			$safe_u = $_SERVER['PHP_AUTH_USER'];
 		}
 
-		if (($safe_q) || ($safe_u))
-		{
-			$extra_sql = " WHERE number LIKE '%{$safe_q}%'";
-			if($safe_u)
-				$extra_sql.= " and users.username = '{$safe_u}'";
+		$extra_sql = " WHERE ( ";
+		$extra_sql.= " number LIKE '%{$safe_q}%' ";
+		$extra_sql.= " OR CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) LIKE '%{$safe_q}%' ";
+		$extra_sql.= " ) ";
+		if($safe_u){
+			$extra_sql.= " and loggedUser.username = '{$safe_u}' and (cases.user_id = loggedUser.user_id OR cases.cocounsel1 = loggedUser.user_id OR cases.cocounsel2 = loggedUser.user_id) ";
+		}else{
+			$extra_sql.= " and loggedUser.user_id = users.user_id ";
 		}
 
 		parent::get($extra_sql);
@@ -798,7 +801,7 @@ else if ('drive' == $api_request[0]){
 					break;
 
 				case 'upload':
-					echo json_encode($rest->uploadFile($_FILES['file_upload']['tmp_name'], $_POST['title'], $_POST['folder_id']));
+					echo json_encode($rest->uploadFile($_FILES['upfile']['tmp_name'], $_POST['file_name'], $_POST['folder_id']));
 					break;
 
 				case 'new_folder':

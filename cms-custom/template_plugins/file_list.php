@@ -4,11 +4,6 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 {
     $server_name_and_port = 'https://dev0.pikasoftware.com:4430';
 	
-	if(!is_numeric($field_value))
-	{
-		$field_value = '0';
-	}
-	
 	if (!is_array($data_array))
 	{
 		$data_array = array();
@@ -93,7 +88,17 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		//if (pikaDrive::isAuthenticated($auth_row["username"]))
 		if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/tokens/' . $auth_row['username']))
 		{
-			$folder_id = $data_array['google_drive_folder_id'];
+			if ($field_value)
+			{
+				$folder_id = $field_value;
+			}
+			
+			else
+			{
+				$folder_id = $data_array['google_drive_folder_id'];				
+			}
+			
+			$file_list_output .= "<h1>{$folder_id}</h1>";
 			$pika = new PikaDrive($auth_row["username"]);
 			$filez = $pika->listFiles($folder_id);
 			$docs_array = array();
@@ -305,8 +310,10 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		$file_list .= pikaTempLib::plugin('ul','','',$docs,array('ul_class=pika_files'));
 	}
 	
-	
-	$folder_array = pikaDocument::getParentFolders($field_value);
+	if (!$google_drive_mode)
+	{
+		$folder_array = pikaDocument::getParentFolders($field_value);
+	}
 	
 	if(count($folder_array))
 	{

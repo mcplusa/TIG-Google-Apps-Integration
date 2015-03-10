@@ -91,6 +91,8 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			if ($field_value)
 			{
 				$folder_id = $field_value;
+				$file_list_output .= "<a class=\"btn btn-primary\" href=\"\" onClick=\"fileList('{$field_name}','{$data_array['google_drive_folder_id']}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\"><i class=\"icon-arrow-up\"></i> Back to top folder</a>";
+
 			}
 			
 			else
@@ -98,7 +100,6 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 				$folder_id = $data_array['google_drive_folder_id'];				
 			}
 			
-			$file_list_output .= "<h1>{$folder_id}</h1>";
 			$pika = new PikaDrive($auth_row["username"]);
 			$filez = $pika->listFiles($folder_id);
 			$docs_array = array();

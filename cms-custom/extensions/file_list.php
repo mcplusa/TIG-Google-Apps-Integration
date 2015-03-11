@@ -1,6 +1,6 @@
 <?php
 
-function file_list($field_name = null, $field_value = null, $menu_array = null, $args = null, $data_array = null)
+function file_list($field_name = null, $field_value = null, $prev_folder_id, $args = null, $data_array = null)
 {
     $server_name_and_port = 'https://dev0.pikasoftware.com:4430';
 	
@@ -88,15 +88,10 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		//if (pikaDrive::isAuthenticated($auth_row["username"]))
 		if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/tokens/' . $auth_row['username']))
 		{
-			if (isset($data_array['google_drive_folder_id']))
-			{
-				$folder_id = $data_array['google_drive_folder_id'];
-			}
+			$folder_id = $field_value;
 			
-			else
-			{
-				$folder_id = $field_value;
-				
+			if ($prev_folder_id)
+			{	
 				$file_list_output .= "<a class=\"btn btn-primary\" href=\"\" onClick=\"fileList('{$field_name}','{$data_array['google_drive_folder_id']}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\"><i class=\"icon-arrow-up\"></i> Back to top folder</a>";
 			}
 			

@@ -1,6 +1,14 @@
+<script>
+$(function () {
+	$( ".drive-link" ).click(function() {
+		$( ".drive-main" ).load( "%%[base_url]%%/pm.php/google_drive_connector/ajax_file_list.php?folder_id=0B-PDdyt2Y6c-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0NQQXZxMnc&prev_folder_id=" );
+	});
+});
+</script>
+
 <!-- <h2 class="hdt">Document Storage</h2>  -->
 %%[file_list]%%
 <a href="https://drive.google.com/folderview?authuser=0&hl=en&id=%%[google_drive_folder_id]%%#list" target="_blank">
 Open in Google Drive</a>
 %%[ajax_init.js,javascript]%%
-%%[file_list.js,javascript,parse]%%
+%%[drive_file_list.js,javascript,parse]%%

@@ -2,9 +2,11 @@
 
 function file_list($folder_id = null, $prev_folder_id, $args = null, $data_array = null)
 {
+	require_once('pikaTempLib.php');
+	
     $server_name_and_port = 'https://dev0.pikasoftware.com:4430';
 	
-	$field_name = 'Hi There';
+	$field_name = 'replace_me';
 	
 	if (!is_array($data_array))
 	{

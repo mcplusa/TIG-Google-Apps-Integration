@@ -1,8 +1,10 @@
 <?php
 
-function file_list($field_name = null, $field_value = null, $prev_folder_id, $args = null, $data_array = null)
+function file_list($field_value = null, $prev_folder_id, $args = null, $data_array = null)
 {
     $server_name_and_port = 'https://dev0.pikasoftware.com:4430';
+	
+	$field_name = 'Hi There';
 	
 	if (!is_array($data_array))
 	{

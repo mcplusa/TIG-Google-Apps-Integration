@@ -72,7 +72,7 @@ function file_list($folder_id = null, $prev_folder_id, $args = null, $data_array
 		
 	
 	$file_list_output .= "<table width=\"100%\" class=\"nopad\" cellspacing=\"0\" cellpadding=\"0\">";
-	$file_list_output .= "<tr><th><a href=\"\" onClick=\"fileList('{$field_name}','0','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">{$doc_type_description}</a></th></tr><tr><td style='padding-left: 20px;padding-top: 3px;'>";
+	//$file_list_output .= "<tr><th><a href=\"\" onClick=\"fileList('{$field_name}','0','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">{$doc_type_description}</a></th></tr><tr><td style='padding-left: 20px;padding-top: 3px;'>";
 	
 	require_once('pikaDocument.php');
 	require_once('pikaUser.php');
@@ -96,8 +96,6 @@ function file_list($folder_id = null, $prev_folder_id, $args = null, $data_array
 			{	
 				$file_list_output .= "<a class=\"btn btn-primary\" href=\"\" onClick=\"fileList('{$field_name}','{$data_array['google_drive_folder_id']}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\"><i class=\"icon-arrow-up\"></i> Back to top folder</a>";
 			}
-			
-			$file_list_output .= "<h1 style=\"color:gray;\">{$folder_id}</h1>\n";
 			
 			$pika = new PikaDrive($auth_row["username"]);
 			$filez = $pika->listFiles($folder_id);

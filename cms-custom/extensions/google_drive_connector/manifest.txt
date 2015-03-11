@@ -1,0 +1,2 @@
+; Produced HTML file list from Google Drive data.
+site_map_title = Google Drive integration

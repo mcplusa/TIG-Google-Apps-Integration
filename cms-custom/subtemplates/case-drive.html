@@ -1,13 +1,15 @@
-<script>
+<!-- <script>
 $(function () {
 	$( ".drive-link" ).click(function() {
-		$( ".drive-main" ).load( "%%[base_url]%%/pm.php/google_drive_connector/ajax_file_list.php?folder_id="  + $( this ).attr( "id" ) + "&prev_folder_id=%%[google_drive_folder_id]%%" );
+		$( ".drive-main" ).load( "%%[base_url]%%/pm.php/google_drive_connector/ajax_file_list.php?folder_id="  + $( this ).attr( "id" ) + "&prev_folder_id=%%[google_drive_folder_id]%%&root_folder_id=%%[google_drive_folder_id]%%" );
 	});
 });
-</script>
+</script> -->
 
 <!-- <h2 class="hdt">Document Storage</h2>  -->
+<div class="drive-main" id="replace_me" style="width:625px;height:825px;overflow:auto;">
 %%[file_list]%%
+</div>
 <a href="https://drive.google.com/folderview?authuser=0&hl=en&id=%%[google_drive_folder_id]%%#list" target="_blank">
 Open in Google Drive</a>
 %%[ajax_init.js,javascript]%%

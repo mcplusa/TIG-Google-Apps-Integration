@@ -1,6 +1,6 @@
 <?php
 
-function file_list($field_value = null, $prev_folder_id, $args = null, $data_array = null)
+function file_list($folder_id = null, $prev_folder_id, $args = null, $data_array = null)
 {
     $server_name_and_port = 'https://dev0.pikasoftware.com:4430';
 	
@@ -89,9 +89,7 @@ function file_list($field_value = null, $prev_folder_id, $args = null, $data_arr
 		// is a work around.
 		//if (pikaDrive::isAuthenticated($auth_row["username"]))
 		if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/tokens/' . $auth_row['username']))
-		{
-			$folder_id = $field_value;
-			
+		{			
 			if ($prev_folder_id)
 			{	
 				$file_list_output .= "<a class=\"btn btn-primary\" href=\"\" onClick=\"fileList('{$field_name}','{$data_array['google_drive_folder_id']}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\"><i class=\"icon-arrow-up\"></i> Back to top folder</a>";
@@ -146,7 +144,7 @@ function file_list($field_value = null, $prev_folder_id, $args = null, $data_arr
 	
 	else 
 	{
-		$docs_array = pikaDocument::getFiles($field_value,$temp_args['doc_type'],$id);
+		$docs_array = pikaDocument::getFiles($folder_id,$temp_args['doc_type'],$id);
 	}
 	
 	$docs = $doc_types = array();
@@ -312,7 +310,7 @@ function file_list($field_value = null, $prev_folder_id, $args = null, $data_arr
 	
 	if (!$google_drive_mode)
 	{
-		$folder_array = pikaDocument::getParentFolders($field_value);
+		$folder_array = pikaDocument::getParentFolders($folder_id);
 	}
 	
 	if(count($folder_array))

@@ -1,7 +1,7 @@
 <script>
 $(function () {
 	$( ".drive-link" ).click(function() {
-		$( ".drive-main" ).load( "%%[base_url]%%/pm.php/google_drive_connector/ajax_file_list.php?folder_id=0B-PDdyt2Y6c-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0NQQXZxMnc&prev_folder_id=" );
+		$( ".drive-main" ).load( "%%[base_url]%%/pm.php/google_drive_connector/ajax_file_list.php?folder_id="  + $( this ).attr( "id" ) + "&prev_folder_id=%%[google_drive_folder_id]%%" );
 	});
 });
 </script>

@@ -112,7 +112,7 @@ else
 }
 // End Drive Upload Form
 
-require_once(getcwd() . 'custom/extensions/google_drive_connector/file_list.php');
+require_once(getcwd() . '-custom/extensions/google_drive_connector/file_list.php');
 $a['file_list'] =  file_list($case1->google_drive_folder_id);
 $template = new pikaTempLib('subtemplates/case-drive.html', $a);
 $C .= $template->draw();

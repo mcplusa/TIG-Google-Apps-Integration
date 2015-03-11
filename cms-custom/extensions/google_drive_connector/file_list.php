@@ -331,7 +331,7 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 		$folder_array = pikaDocument::getParentFolders($folder_id);
 	}
 	
-	if(count($folder_array))
+	if(!$google_drive_mode && count($folder_array))
 	{
 		foreach ($folder_array as $folder)
 		{

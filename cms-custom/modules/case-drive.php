@@ -84,7 +84,7 @@ if (file_exists("/var/www/html/cms-custom/extensions/google_drive_connector/toke
 	<div class="row">
 		<div class="span5">
 		<input type="file" name="file_upload">
-		<input type="hidden" name="folder_id" value="' . $case1->google_drive_folder_id . '">
+		<input type="hidden" name="folder_id" id="upload_folder_id" value="' . $case1->google_drive_folder_id . '">
 		<input type="submit" value="Upload">
 		</div>
 		<div class="span4">';
@@ -112,7 +112,8 @@ else
 }
 // End Drive Upload Form
 
-
+require_once(getcwd() . '-custom/extensions/google_drive_connector/file_list.php');
+$a['file_list'] =  file_list($case1->google_drive_folder_id, null, $case1->google_drive_folder_id);
 $template = new pikaTempLib('subtemplates/case-drive.html', $a);
 $C .= $template->draw();
 
@@ -123,7 +124,7 @@ $C .= $template->draw();
 if (array_key_exists('file_upload', $_FILES))
 {
 	$rest = new PikaDrive($auth_row['username']);
-	$y = $rest->uploadFile($_FILES['file_upload']['tmp_name'], $_FILES['file_upload']['name'], $case1->google_drive_folder_id);  
+	$y = $rest->uploadFile($_FILES['file_upload']['tmp_name'], $_FILES['file_upload']['name'], htmlspecialchars($_POST['folder_id']));  
 	// $_POST['title'], $_POST['folder_id'])	
 }
 

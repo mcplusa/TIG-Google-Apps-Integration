@@ -1,13 +1,12 @@
 <?php
 
-function file_list($field_name = null, $field_value = null, $menu_array = null, $args = null, $data_array = null)
+function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = null, $data_array = null)
 {
+	require_once('pikaTempLib.php');
+	
     $server_name_and_port = 'https://dev0.pikasoftware.com:4430';
 	
-	if(!is_numeric($field_value))
-	{
-		$field_value = '0';
-	}
+	$field_name = 'replace_me';
 	
 	if (!is_array($data_array))
 	{
@@ -70,10 +69,19 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 	$file_list_output = '';
 	$file_list = $folder_list = '';
 	
-		
-	
+	$file_list_output .= '
+							<script>
+							$(function () {
+								$( ".drive-link" ).click(function() {
+									$( ".drive-main" ).load( "' . $base_url . '/pm.php/google_drive_connector/ajax_file_list.php?folder_id="  + $( this ).attr( "id" ) + "&prev_folder_id=' . $folder_id . '&root_folder_id=' . $root_folder_id . '" );
+									$( "#upload_folder_id" ).val($( this ).attr( "id" ));
+								});
+							});
+							</script>
+
+						';		
 	$file_list_output .= "<table width=\"100%\" class=\"nopad\" cellspacing=\"0\" cellpadding=\"0\">";
-	$file_list_output .= "<tr><th><a href=\"\" onClick=\"fileList('{$field_name}','0','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">{$doc_type_description}</a></th></tr><tr><td style='padding-left: 20px;padding-top: 3px;'>";
+	//$file_list_output .= "<tr><th><a href=\"\" onClick=\"fileList('{$field_name}','0','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\">{$doc_type_description}</a></th></tr><tr><td style='padding-left: 20px;padding-top: 3px;'>";
 	
 	require_once('pikaDocument.php');
 	require_once('pikaUser.php');
@@ -92,8 +100,23 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		// is a work around.
 		//if (pikaDrive::isAuthenticated($auth_row["username"]))
 		if (file_exists('/var/www/html/cms-custom/extensions/google_drive_connector/tokens/' . $auth_row['username']))
-		{
-			$folder_id = $data_array['google_drive_folder_id'];
+		{			
+			if ($folder_id != $root_folder_id)
+			{	
+				$file_list_output .= "<a class=\"btn btn-primary\" id=\"{$prev_folder_id}\"><i class=\"icon-arrow-up icon-white\"></i> Up one folder</a>";
+				$file_list_output .= '
+										<script>
+										$(function () {
+											$( "#' . $prev_folder_id . '" ).click(function() {
+												$( ".drive-main" ).load( "' . $base_url . '/pm.php/google_drive_connector/ajax_file_list.php?folder_id="  + $( this ).attr( "id" ) + "&prev_folder_id=' . $folder_id . '&root_folder_id=' . $root_folder_id . '" );
+												$( "#upload_folder_id" ).val($( this ).attr( "id" ));
+											});
+										});
+										</script>
+
+									';
+			}
+			
 			$pika = new PikaDrive($auth_row["username"]);
 			$filez = $pika->listFiles($folder_id);
 			$docs_array = array();
@@ -119,8 +142,10 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 					$f['folder'] = false;
 				}
 				
-				$docs_array[] = $f;
+				$docs_array[strtolower($f['title'])] = $f;
 			}
+			
+			ksort($docs_array);
 		}
 		
 		else
@@ -141,10 +166,19 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 	
 	else 
 	{
-		$docs_array = pikaDocument::getFiles($field_value,$temp_args['doc_type'],$id);
+		$docs_array = pikaDocument::getFiles($folder_id,$temp_args['doc_type'],$id);
 	}
 	
 	$docs = $doc_types = array();
+
+
+	$docs[]['li'] = '';
+	$docs[0]['li'] .= '<div style="" class="drive-list-header">';
+	$docs[0]['li'] .= '<div style="" class="drive-info">';
+	$docs[0]['li'] .= "TITLE";
+	$docs[0]['li'] .= '</div><div style="" class="drive-last-modified">LAST MODIFIED';
+	$docs[0]['li'] .= "<span style=\"color: rgb(119, 119, 119);\"></span>";
+	$docs[0]['li'] .= "</div></div>";
 
 	foreach ($docs_array as $key => $file)
 	{
@@ -160,12 +194,13 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			$user_name = pikaTempLib::plugin('text_name','',$user->getValues());			
 		}
 		
+		$file_date = date('M d', strtotime($file['modifiedDate']));
+		
 		//print_r($docs_array);
 		if($file['folder'] != 1)
 		{
 			if ($google_drive_mode)
 			{
-				$file_date = date('M d', strtotime($file['modifiedDate']));
 				$docs[$key]['li'] = '';
 				/*
 				$docs[$key]['li'] .= "<a href=\"{$file['selfLink']}\">X</a>";
@@ -278,7 +313,7 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			
 			$docs[$key]['li'] = '';
 			// AMW - This seems to work a lot better than using $file['webContentLink']
-			$docs[$key]['li'] .= "<a onClick=\"fileList('{$field_name}','{$js_folder_id}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\" class=\"drive-link\">";
+			$docs[$key]['li'] .= "<a class=\"drive-link\" id=\"$js_folder_id\">";
 			$docs[$key]['li'] .= '<div style="" class="drive-row">';
 			$docs[$key]['li'] .= '<div style="" class="drive-info">';
 			$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\" class=\"drive-icon\">";
@@ -305,10 +340,12 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 		$file_list .= pikaTempLib::plugin('ul','','',$docs,array('ul_class=pika_files'));
 	}
 	
+	if (!$google_drive_mode)
+	{
+		$folder_array = pikaDocument::getParentFolders($folder_id);
+	}
 	
-	$folder_array = pikaDocument::getParentFolders($field_value);
-	
-	if(count($folder_array))
+	if(!$google_drive_mode && count($folder_array))
 	{
 		foreach ($folder_array as $folder)
 		{
@@ -361,8 +398,10 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 			$div_id = " id=\"{$temp_args['id']}\"";
 		}
 		
-		$file_list_output = "<div{$class}{$div_id} style=\"{$width}{$height}overflow:auto;\">"
+		/*
+			$file_list_output = "<div{$class}{$div_id} style=\"{$width}{$height}overflow:auto;\">"
 							. $file_list_output . "</div>";
+							*/
 							
 		if($temp_args['folder_id_hidden']) 
 		{
@@ -378,7 +417,7 @@ function file_list($field_name = null, $field_value = null, $menu_array = null, 
 	
 	
 	
-	if ($google_drive_mode && pl_grab_get('folder_ptr', null) == null)
+	if (false && $google_drive_mode && pl_grab_get('folder_ptr', null) == null)
 	{
 		// I don't have permission to edit pikaDrive on dev server at the moment, this
 		// is a work around.

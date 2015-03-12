@@ -102,7 +102,7 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 		{			
 			if ($folder_id != $root_folder_id)
 			{	
-				$file_list_output .= "<a class=\"btn btn-primary\" id=\"{$prev_folder_id}\"><i class=\"icon-arrow-up\"></i> Back to top folder</a>";
+				$file_list_output .= "<a class=\"btn btn-primary\" id=\"{$prev_folder_id}\"><i class=\"icon-arrow-up\"></i> Up one folder</a>";
 				$file_list_output .= '
 										<script>
 										$(function () {
@@ -299,7 +299,7 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 			
 			$docs[$key]['li'] = '';
 			// AMW - This seems to work a lot better than using $file['webContentLink']
-			$docs[$key]['li'] .= "<a onClick=\"fileList('{$field_name}','{$js_folder_id}','{$temp_args['mode']}','{$temp_args['doc_type']}','{$temp_args['folder_field']}','{$temp_args['doc_field']}','{$case_id}','{$report_name}');return false;\" class=\"drive-link\" id=\"$js_folder_id\">";
+			$docs[$key]['li'] .= "<a class=\"drive-link\" id=\"$js_folder_id\">";
 			$docs[$key]['li'] .= '<div style="" class="drive-row">';
 			$docs[$key]['li'] .= '<div style="" class="drive-info">';
 			$docs[$key]['li'] .= "<img src=\"{$file['iconLink']}\" class=\"drive-icon\">";

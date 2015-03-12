@@ -173,12 +173,12 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 
 
 	$docs[]['li'] = '';
-	$docs[$key]['li'] .= '<div style="" class="drive-list-header">';
-	$docs[$key]['li'] .= '<div style="" class="drive-info">';
-	$docs[$key]['li'] .= "TITLE";
-	$docs[$key]['li'] .= '</div><div style="" class="drive-last-modified">LAST MODIFIED';
-	$docs[$key]['li'] .= "<span style=\"color: rgb(119, 119, 119);\"></span>";
-	$docs[$key]['li'] .= "</div></div>";
+	$docs[0]['li'] .= '<div style="" class="drive-list-header">';
+	$docs[0]['li'] .= '<div style="" class="drive-info">';
+	$docs[0]['li'] .= "TITLE";
+	$docs[0]['li'] .= '</div><div style="" class="drive-last-modified">LAST MODIFIED';
+	$docs[0]['li'] .= "<span style=\"color: rgb(119, 119, 119);\"></span>";
+	$docs[0]['li'] .= "</div></div>";
 
 	foreach ($docs_array as $key => $file)
 	{

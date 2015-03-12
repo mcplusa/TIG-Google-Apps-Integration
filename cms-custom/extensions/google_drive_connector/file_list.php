@@ -405,7 +405,7 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 	
 	
 	
-	if ($google_drive_mode && pl_grab_get('folder_ptr', null) == null)
+	if (false && $google_drive_mode && pl_grab_get('folder_ptr', null) == null)
 	{
 		// I don't have permission to edit pikaDrive on dev server at the moment, this
 		// is a work around.

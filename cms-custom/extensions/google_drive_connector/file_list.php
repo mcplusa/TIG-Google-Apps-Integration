@@ -140,8 +140,10 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 					$f['folder'] = false;
 				}
 				
-				$docs_array[] = $f;
+				$docs_array[strtolower($f['title'])] = $f;
 			}
+			
+			ksort($docs_array);
 		}
 		
 		else

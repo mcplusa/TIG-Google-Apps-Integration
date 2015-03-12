@@ -74,6 +74,7 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 							$(function () {
 								$( ".drive-link" ).click(function() {
 									$( ".drive-main" ).load( "' . $base_url . '/pm.php/google_drive_connector/ajax_file_list.php?folder_id="  + $( this ).attr( "id" ) + "&prev_folder_id=' . $folder_id . '&root_folder_id=' . $root_folder_id . '" );
+									$( "#upload_folder_id" ).val($( this ).attr( "id" ));
 								});
 							});
 							</script>
@@ -108,6 +109,7 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 										$(function () {
 											$( "#' . $prev_folder_id . '" ).click(function() {
 												$( ".drive-main" ).load( "' . $base_url . '/pm.php/google_drive_connector/ajax_file_list.php?folder_id="  + $( this ).attr( "id" ) + "&prev_folder_id=' . $folder_id . '&root_folder_id=' . $root_folder_id . '" );
+												$( "#upload_folder_id" ).val($( this ).attr( "id" ));
 											});
 										});
 										</script>

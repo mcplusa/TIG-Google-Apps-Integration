@@ -183,12 +183,13 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 			$user_name = pikaTempLib::plugin('text_name','',$user->getValues());			
 		}
 		
+		$file_date = date('M d', strtotime($file['modifiedDate']));
+		
 		//print_r($docs_array);
 		if($file['folder'] != 1)
 		{
 			if ($google_drive_mode)
 			{
-				$file_date = date('M d', strtotime($file['modifiedDate']));
 				$docs[$key]['li'] = '';
 				/*
 				$docs[$key]['li'] .= "<a href=\"{$file['selfLink']}\">X</a>";

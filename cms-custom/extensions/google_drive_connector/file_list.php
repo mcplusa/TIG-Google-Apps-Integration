@@ -102,7 +102,7 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 		{			
 			if ($folder_id != $root_folder_id)
 			{	
-				$file_list_output .= "<a class=\"btn btn-primary\" id=\"{$prev_folder_id}\"><i class=\"icon-arrow-up\"></i> Up one folder</a>";
+				$file_list_output .= "<a class=\"btn btn-primary\" id=\"{$prev_folder_id}\"><i class=\"icon-arrow-up icon-white\"></i> Up one folder</a>";
 				$file_list_output .= '
 										<script>
 										$(function () {
@@ -168,6 +168,15 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 	}
 	
 	$docs = $doc_types = array();
+
+
+	$docs[]['li'] = '';
+	$docs[$key]['li'] .= '<div style="" class="drive-list-header">';
+	$docs[$key]['li'] .= '<div style="" class="drive-info">';
+	$docs[$key]['li'] .= "TITLE";
+	$docs[$key]['li'] .= '</div><div style="" class="drive-last-modified">LAST MODIFIED';
+	$docs[$key]['li'] .= "<span style=\"color: rgb(119, 119, 119);\"></span>";
+	$docs[$key]['li'] .= "</div></div>";
 
 	foreach ($docs_array as $key => $file)
 	{

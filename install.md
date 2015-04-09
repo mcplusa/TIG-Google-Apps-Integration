@@ -45,7 +45,7 @@ You can retrieve the ID by navigating to the folder from the Google Drive
 website, and copying the unique ID from the URL.  Here's an example; you want 
 the characters in bold text:
 
-https://drive.google.com/drive/u/1/folders/**0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0123456789**
+`https://drive.google.com/drive/u/1/folders/0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0123456789`
 
 *  Pull up the Client ID and Client Secret codes for your program's Google Apps
 account provided by Google.

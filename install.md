@@ -27,14 +27,30 @@ your site folder.
 have customized your templates/default.html file, you'll need to merge the 
 project's changes to this file with your existing changes.
 
-*  Change line 10 in custom/modules/case-drive.php to match the unique ID of 
-your program's root Google Drive folder.  This needs to be a Drive folder to 
+*  Create your program's root Google Drive folder.  This needs to be a Drive folder to 
 which everyone in the organization has read and write privileges.  The folder 
-can be in any user's account.  You can retrieve the ID by navigating to the 
+can be in any user's account.  
+
+*  Determine the unique ID of of the root Google Drive folder you just created.  
+You can retrieve the ID by navigating to the 
 folder from the Google Drive website, and copying the unique ID from the URL.  
 Here's an example; you want the characters in bold text:
 
 `https://drive.google.com/drive/u/1/folders/**0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0123456789**`
+
+*  Pull up the Client ID and Client Secret codes for your program's Google Apps
+account provided by Google.
+
+*  Create a blank file "google_drive_config.php" in 
+"custom/extensions/google_drive_connector/".  This is the Google Drive 
+configuration file.  It should define the unique folder ID, Client ID and 
+Client Secret is this format:
+	
+<?php
+define("CLIENT_ID", '**abc123**');
+define("CLIENT_SECRET", '**def456**');
+define("UNIQUE_FOLDER_ID", '**0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0123456789**');
+?>
 
 *  Run the SQL file google_apps_api.sql on your Pika CMS database.
 

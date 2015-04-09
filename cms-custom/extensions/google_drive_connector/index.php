@@ -11,7 +11,7 @@ require_once 'google-api-php-client/src/contrib/Google_DriveService.php';
 	define("CLIENT_SECRET", 'def456');
 	?>
 */
-require_once('/var/www/html/cms-custom/extensions/google_drive_connector/google_drive_config.php');
+require_once(getcwd() . '-custom/extensions/google_drive_connector/google_drive_config.php');
 
 $url_array = explode('?', 'http://'.$_SERVER ['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 define("URL", $url_array[0]);

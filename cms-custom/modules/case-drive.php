@@ -9,7 +9,7 @@
 // Config variables
 $root_folder_id = '0B-PDdyt2Y6c-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0NQQXZxMnc';
 
-require_once('/var/www/html/cms-custom/extensions/google_drive_connector/index.php');
+require_once(getcwd() . '-custom/extensions/google_drive_connector/index.php');
 
 function folder_search_or_create($folder_name, $parent_id)
 {
@@ -32,7 +32,7 @@ function folder_search_or_create($folder_name, $parent_id)
 	return $z['id'];
 }
 
-if (strlen($case1->google_drive_folder_id) == 0 && !file_exists("/var/www/html/cms-custom/extensions/google_drive_connector/tokens/{$auth_row['username']}"))
+if (strlen($case1->google_drive_folder_id) == 0 && !file_exists(getcwd() . "-custom/extensions/google_drive_connector/tokens/{$auth_row['username']}"))
 {
 	// Bail out to prevent errors when folder_search_or_create is run.
 	$clean_username = htmlspecialchars($auth_row['username']);
@@ -77,7 +77,7 @@ $a = array('google_drive_folder_id' => $case1->google_drive_folder_id);
 // I don't have permission to edit pikaDrive on dev server at the moment, this
 // is a work around.
 //if (pikaDrive::isAuthenticated($auth_row["username"]))
-if (file_exists("/var/www/html/cms-custom/extensions/google_drive_connector/tokens/{$auth_row['username']}"))
+if (file_exists(getcwd() . "-custom/extensions/google_drive_connector/tokens/{$auth_row['username']}"))
 {
 	$C .= '
 	<form method="post" enctype="multipart/form-data" action="">

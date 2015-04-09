@@ -2,11 +2,20 @@
 
 ## Requirements
 
-Google Apps for Business with Drive enabled for all users
-SSL
-CentOS 7
+* Google Apps for Business account, with Drive enabled for all users.
+* Pika CMS 6.0 or higher.
+* CentOS version 7.  It should work OK on earlier versions of CentOS, or other
+operating systems, but the httpd service syntax and file paths may be 
+different than what appears in these instructions.
+* SSL should be enabled on the web server.  A self-signed certificate will work fine.
+* Your Apache web server Document Root directory needs to be /var/www/html/.
+* Your Pika CMS files and the API files need to be installed to /var/www/html/.
 
 ## Caveats
+
+* Google Drive does not enforce Pika CMS security level rules, so any documents
+uploaded to Google Drive through the Pika CMS case tab will be visible to all
+users, even if they don't have read access in Pika CMS to the case the document belongs to.
 
 ## Instructions
 

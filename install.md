@@ -36,14 +36,14 @@ your site folder.
 have customized your templates/default.html file, you'll need to merge the 
 project's changes to this file with your existing changes.
 
-*  Create your program's root Google Drive folder.  This needs to be a Drive folder to 
-which everyone in the organization has read and write privileges.  The folder 
-can be in any user's account.  
+*  Create your program's root CMS documents folder in Google Drive.  This needs 
+to be a Drive folder to which everyone in the organization has read and write 
+privileges.  The folder can be in any user's account.  
 
 *  Determine the unique ID of of the root Google Drive folder you just created.  
-You can retrieve the ID by navigating to the 
-folder from the Google Drive website, and copying the unique ID from the URL.  
-Here's an example; you want the characters in bold text:
+You can retrieve the ID by navigating to the folder from the Google Drive 
+website, and copying the unique ID from the URL.  Here's an example; you want 
+the characters in bold text:
 
 `https://drive.google.com/drive/u/1/folders/**0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0123456789**`
 

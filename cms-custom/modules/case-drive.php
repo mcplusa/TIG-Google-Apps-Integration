@@ -5,10 +5,6 @@
 // ...or should it???  What happens if the intake person doesn't have Drive set
 // up?
 
-
-// Config variables
-$root_folder_id = '0B-PDdyt2Y6c-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0NQQXZxMnc';
-
 require_once(getcwd() . '-custom/extensions/google_drive_connector/index.php');
 
 function folder_search_or_create($folder_name, $parent_id)
@@ -58,7 +54,7 @@ if (strlen($case1->google_drive_folder_id) == 0)
 	$case_sub_folder_name = str_pad(substr($case1->case_id, -3), 3, '0', STR_PAD_LEFT);	
 	// Look for the sub_folder where this case's folder will go.  If it doesn't
 	// exist, create it.
-	$case_sub_folder_id = folder_search_or_create($case_sub_folder_name, $root_folder_id);
+	$case_sub_folder_id = folder_search_or_create($case_sub_folder_name, UNIQUE_FOLDER_ID);
 	// Now that the sub_folder_id has either been found or created, we can find
 	// (if the folder has been orphaned somehow) or create the case's folder 
 	// inside the case_sub_folder (which is inside the root folder).

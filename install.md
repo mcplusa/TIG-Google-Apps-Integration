@@ -43,7 +43,7 @@ privileges.  The folder can be in any user's account.
 *  Determine the unique ID of of the root Google Drive folder you just created.  
 You can retrieve the ID by navigating to the folder from the Google Drive 
 website, and copying the unique ID from the URL.  Here's an example; you want 
-the characters in bold text:
+the characters after "folders/":
 
 `https://drive.google.com/drive/u/1/folders/0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0123456789`
 

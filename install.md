@@ -2,11 +2,20 @@
 
 ## Requirements
 
-Google Apps for Business with Drive enabled for all users
-SSL
-CentOS 7
+* Google Apps for Business account, with Drive enabled for all users.
+* Pika CMS 6.0 or higher.
+* CentOS version 7.  It should work OK on earlier versions of CentOS, or other
+operating systems, but the httpd service syntax and file paths may be 
+different than what appears in these instructions.
+* SSL should be enabled on the web server.  A self-signed certificate will work fine.
+* Your Apache web server Document Root directory needs to be /var/www/html/.
+* Your Pika CMS files and the API files need to be installed to /var/www/html/.
 
 ## Caveats
+
+* Google Drive does not enforce Pika CMS security level rules, so any documents
+uploaded to Google Drive through the Pika CMS case tab will be visible to all
+users, even if they don't have read access in Pika CMS to the case the document belongs to.
 
 ## Instructions
 
@@ -27,14 +36,14 @@ your site folder.
 have customized your templates/default.html file, you'll need to merge the 
 project's changes to this file with your existing changes.
 
-*  Create your program's root Google Drive folder.  This needs to be a Drive folder to 
-which everyone in the organization has read and write privileges.  The folder 
-can be in any user's account.  
+*  Create your program's root CMS documents folder in Google Drive.  This needs 
+to be a Drive folder to which everyone in the organization has read and write 
+privileges.  The folder can be in any user's account.  
 
 *  Determine the unique ID of of the root Google Drive folder you just created.  
-You can retrieve the ID by navigating to the 
-folder from the Google Drive website, and copying the unique ID from the URL.  
-Here's an example; you want the characters in bold text:
+You can retrieve the ID by navigating to the folder from the Google Drive 
+website, and copying the unique ID from the URL.  Here's an example; you want 
+the characters in bold text:
 
 `https://drive.google.com/drive/u/1/folders/**0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0123456789**`
 

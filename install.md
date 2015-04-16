@@ -61,6 +61,9 @@ define("CLIENT_SECRET", '**def456**');
 define("UNIQUE_FOLDER_ID", '**0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0123456789**');
 ?>
 
+*  Change line 10 in custom/modules/case-drive.php to match your unique folder
+ID.
+
 *  Run the SQL file google_apps_api.sql on your Pika CMS database.
 
 *  Create a blank file "google_apps_api.conf" in /etc/httpd/conf.d/.  Paste the following into it then save:

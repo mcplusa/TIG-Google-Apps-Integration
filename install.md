@@ -56,9 +56,13 @@ configuration file.  It should define the unique folder ID, Client ID and
 Client Secret is this format:
 	
 <?php
+
 define("CLIENT_ID", '**abc123**');
+
 define("CLIENT_SECRET", '**def456**');
+
 define("UNIQUE_FOLDER_ID", '**0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSOHpMb0lmUmtwZ0123456789**');
+
 ?>
 
 *  Change line 10 in custom/modules/case-drive.php to match your unique folder

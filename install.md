@@ -3,7 +3,7 @@
 ## Requirements
 
 * Google Apps for Business account, with Drive enabled for all users.
-* Pika CMS 6.0 or higher.
+* Pika CMS 6.04 or higher.
 * CentOS version 7.  It should work OK on earlier versions of CentOS, or other
 operating systems, but the httpd service syntax and file paths may be 
 different than what appears in these instructions.

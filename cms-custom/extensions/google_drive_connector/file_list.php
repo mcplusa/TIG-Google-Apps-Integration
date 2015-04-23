@@ -147,21 +147,6 @@ function file_list($folder_id = null, $prev_folder_id, $root_folder_id, $args = 
 			
 			ksort($docs_array);
 		}
-		
-		else
-		{
-			$clean_username = htmlspecialchars($auth_row['username']);
-			
-			$file_list_output .= '<a class="btn btn-large"';
-			$file_list_output .= ' onClick=\'window.open("/api/v1/drive/auth?username='.$clean_username.'", "Request for Authorization", "width=600, height=400, scrollbars=yes");\'';
-			$file_list_output .= '>Please log into Google Drive</a>';
-
-			//$file_list_output .= '<a class="btn btn-large" href="/api/v1/drive/auth?username=' ;
-			//$file_list_output .= htmlspecialchars($auth_row['username']);
-			//$file_list_output .= '" target="_blank">Please log into Google Drive</a>';
-
-			$file_list_output .= '<p>Please reload this page once you\'ve logged in.</p>';
-		}
 	}
 	
 	else 

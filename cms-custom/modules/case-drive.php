@@ -33,10 +33,10 @@ if (strlen($case1->google_drive_folder_id) == 0 && !file_exists(getcwd() . "-cus
 	// Bail out to prevent errors when folder_search_or_create is run.
 	$clean_username = htmlspecialchars($auth_row['username']);
 	
-	$C .= '<p>This case does not have a Google Drive folder.  Please log your Pika CMS account into <a class="btn btn-mini"';
-	$C .= ' onClick=\'window.open("/api/v1/drive/auth?username='.$clean_username.'", "Request for Authorization", "width=600, height=400, scrollbars=yes");\'';
-	$C .= '>Google Drive</a> and Pika CMS will create one.';
-	$C .= '  Please reload this page once you\'ve logged in.</p>';
+	$C .= '<p>This case does not have a Google Drive folder. you need to connect your Pika CMS account to your Google account. To do so, <a class=""';
+	$C .= ' onClick=\'window.open("/api/v1/drive/auth?username='.$clean_username.'", "Request for Authorization", "width=450, height=500, scrollbars=yes");\'';
+	$C .= '><strong>click here to log into Google Drive</strong></a>.</p>';
+	$C .= '<p><em>Please reload or refresh this page once you have logged in</em>.</p>';
 	
 }
 
@@ -77,18 +77,18 @@ if (file_exists(getcwd() . "-custom/extensions/google_drive_connector/tokens/{$a
 {
 	$C .= '
 	<form method="post" enctype="multipart/form-data" action="">
-	<div class="row">
+	<div class="row file-uploads">
 		<div class="span5">
-		<input type="file" name="file_upload">
+		<input class="choose-file" type="file" name="file_upload">
 		<input type="hidden" name="folder_id" id="upload_folder_id" value="' . $case1->google_drive_folder_id . '">
 		<input type="submit" value="Upload">
 		</div>
-		<div class="span4">';
+		<div class="span4 disconnect">';
 
 	// Add a "Log out of Google Drive" button.
-	$C .= '<a class="btn btn-mini" title="Disconnect your Pika CMS account from Google Drive uploads" href="/api/v1/drive/unauthorize?username=' ;
+	$C .= '<a class="btn" title="Disconnect your Pika CMS account from Google Drive." href="/api/v1/drive/unauthorize?username=' ;
 	$C .= htmlspecialchars($auth_row['username']);
-	$C .= '" target="_blank">X</a>';
+	$C .= '" target="_blank">Disconnect Drive</a>';
 
 	$C .= '
 		</div>
@@ -101,10 +101,10 @@ else
 {
 	$clean_username = htmlspecialchars($auth_row['username']);
 	
-	$C .= '<p>Please log your Pika CMS account into <a class="btn btn-mini"';
-	$C .= ' onClick=\'window.open("/api/v1/drive/auth?username='.$clean_username.'", "Request for Authorization", "width=600, height=400, scrollbars=yes");\'';
-	$C .= '>Google Drive</a> if you wish to upload documents to Drive through Pika CMS.';
-	$C .= '  Please reload this page once you\'ve logged in.</p>';
+	$C .= '<p>To upload and view case-related files, you need to connect your Pika CMS account to your Google account. To do so, <a class=""';
+	$C .= ' onClick=\'window.open("/api/v1/drive/auth?username='.$clean_username.'", "Request for Authorization", "width=450, height=500, scrollbars=yes");\'';
+	$C .= '><strong>click here to log into Google Drive</strong></a>.</p>';
+	$C .= '<p><em>Please reload or refresh this page once you have logged in</em>.</p>';
 }
 // End Drive Upload Form
 

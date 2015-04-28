@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "EmailMessage",
+            "action": {
+                "@type": "ViewAction",
+                "url": "%eventUrl%",
+            "name": "Add to Calendar"
+            }
+        }
+    </script>
+  </head>
+  <body>
+    <p>
+      This is message is to notify you that a case tickler has been added to the %clientFirstName% %clientLastName% Case No. <a href="%caseLink%">%case%</a>
+    </p>
+      
+    <a href="%eventUrl%" >Add to Calendar</a>
+  </body>
+</html>

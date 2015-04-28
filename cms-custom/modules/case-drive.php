@@ -90,6 +90,10 @@ if (file_exists(getcwd() . "-custom/extensions/google_drive_connector/tokens/{$a
 	$C .= htmlspecialchars($auth_row['username']);
 	$C .= '" target="_blank">Disconnect Drive</a>';
 
+	/* TODO:  Use this button once Pika CMS is using a version of Bootstrap 
+		that includes Font Awesome <i class="icon-signout"></i>
+		*/
+
 	$C .= '
 		</div>
 	</div>

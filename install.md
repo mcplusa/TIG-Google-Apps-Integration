@@ -21,6 +21,8 @@ users, even if they don't have read access in Pika CMS to the case the document 
 
 *  Log into your Pika CMS server.
 
+### Setting up the Source Code Files
+
 *  Create the folders /var/www/html/api and /var/www/html/api/v1.
 
 *  Download the project files off of github.  
@@ -35,6 +37,32 @@ your site folder.
 *  Copy the project files in cms-custom/ to your Pika CMS custom folder.  If you
 have customized your templates/default.html file, you'll need to merge the 
 project's changes to this file with your existing changes.
+
+### Allowing Google Drive API Connections
+
+* At Google Developers Console, <https://console.developers.google.com/>, create 
+or select an existing project.
+
+* In side bar on the left, select Api & Auth > API.
+
+* Make sure that Drive API is "ON".
+
+* In side bar on the left, select Api & Auth > Credentials.
+
+* Create a new Client ID.
+
+* Application type: *Web Application*
+
+* Authorised Javascript Origins: *[your site url]*
+
+* Authorised Redirect URIS: *[your site url]*/api/v1/drive/auth
+
+* Make a note of your Client ID and Client Secret values, you will need them
+later.
+
+* Change google_drive_connector/tokens folder permissions to 777.
+
+### Creating a Google Drive Folder to Store the Documents
 
 *  Create your program's root CMS documents folder in Google Drive.  This needs 
 to be a Drive folder to which everyone in the organization has read and write 
@@ -68,7 +96,41 @@ define("UNIQUE_FOLDER_ID", '**0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSO
 *  Change line 10 in custom/modules/case-drive.php to match your unique folder
 ID.
 
+### Tickler Email Integration
+
+* Change line 3 and 4 in custom/extensions/create_tickler/config.php to match 
+a valid Gmail user and password.
+
+* Change line 6 in custom/extensions/create_tickler/config.php to set the subject
+line of tickler emails.  You could use %case% or %client% inside subject and it 
+will be dynamically replaced by Case Number and Client Name.
+
+* Optionally, change line 9 and 10 in custom/extensions/create_tickler/config.php to 
+set the name and email that will appears on tickler emails.
+
+* Optionally, edit custom/extensions/create_tickler/content.html to modify the 
+email template.
+
+* Run cms-custom/extensions/create_tickler/test.php to test the email configuration
+without creating an actual tickler record.
+
+### Registering Gmail Markup
+
+* Send an email from the test page to <schema.whitelisting+sample@gmail.com> to start
+the registration process.
+* Fill out the registration form at <https://docs.google.com/a/google.com/forms/d/1PA-vjjk3yJF7MLPOVKbIz3MBfhyma2obS8NIZ0JYx8I/viewform?pli=1>.
+* Is your email Promotional or has a Promotional Intent or is a Solicitation? "No"
+* Which Structured Data Type do you plan to add to your email? "Action"
+* Which Action do you plan to add to your email? "One-Click Action"
+* If you plan to use a One-Click or Go-To Action, what text will appear on the button? "Add to Calendar"
+* Wait for google approve your request.
+* For advanced info, please access "Gmail Markup - Registering with google" at <https://developers.google.com/gmail/markup/registering-with-google>.
+
+### Modify the Database
+
 *  Run the SQL file google_apps_api.sql on your Pika CMS database.
+
+### Configure Apache Web Server
 
 *  Create a blank file "google_apps_api.conf" in /etc/httpd/conf.d/.  Paste the following into it then save:
 
@@ -87,5 +149,7 @@ ID.
 `</Directory>`
 
 *  Restart apache by running "sudo systemctl restart httpd.service".
+
+### End of Installation
 
 The API will now be available at `https://(server name)/api/v1/`.

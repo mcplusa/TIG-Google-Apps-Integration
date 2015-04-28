@@ -93,9 +93,6 @@ define("UNIQUE_FOLDER_ID", '**0B-ABCDEFGHI-fnRNRndBYWZMQ2ZRbHlJc3R0UVpoc3VqaThSO
 
 ?>
 
-*  Change line 10 in custom/modules/case-drive.php to match your unique folder
-ID.
-
 ### Tickler Email Integration
 
 * Change line 3 and 4 in custom/extensions/create_tickler/config.php to match 

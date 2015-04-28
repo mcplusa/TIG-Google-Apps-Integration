@@ -51,11 +51,11 @@ or select an existing project.
 
 * Create a new Client ID.
 
-* Application type: *Web Application*
+* Application type: **Web Application**
 
-* Authorised Javascript Origins: *[your site url]*
+* Authorised Javascript Origins: **(your site url)**
 
-* Authorised Redirect URIS: *[your site url]*/api/v1/drive/auth
+* Authorised Redirect URIS: **(your site url)**/api/v1/drive/auth
 
 * Make a note of your Client ID and Client Secret values, you will need them
 later.
@@ -118,13 +118,20 @@ without creating an actual tickler record.
 
 * Send an email from the test page to <schema.whitelisting+sample@gmail.com> to start
 the registration process.
+
 * Fill out the registration form at <https://docs.google.com/a/google.com/forms/d/1PA-vjjk3yJF7MLPOVKbIz3MBfhyma2obS8NIZ0JYx8I/viewform?pli=1>.
+
 * Is your email Promotional or has a Promotional Intent or is a Solicitation? "No"
+
 * Which Structured Data Type do you plan to add to your email? "Action"
+
 * Which Action do you plan to add to your email? "One-Click Action"
+
 * If you plan to use a One-Click or Go-To Action, what text will appear on the button? "Add to Calendar"
-* Wait for google approve your request.
-* For advanced info, please access "Gmail Markup - Registering with google" at <https://developers.google.com/gmail/markup/registering-with-google>.
+
+* Wait for Google to approve your request.
+
+For detailed information about the registration process, please read "Email Markup - Registering with Google" at <https://developers.google.com/gmail/markup/registering-with-google>.
 
 ### Modify the Database
 

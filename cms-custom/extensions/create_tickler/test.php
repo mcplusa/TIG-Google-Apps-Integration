@@ -1,17 +1,17 @@
 <?php
-
   if(isset($_GET['email'])){
-    require "create_tickler.php";
-
+    require 'create_tickler.php';
+    
+    date_default_timezone_set('UTC');
     $activity = array(
       'case_number'   => $_GET['case'],
       'tickler_email' => $_GET['email'],
       'client_name'   => $_GET['client'],
-      'act_date'      => date("Y/m/d"),
+      'act_date'      => date("Y/m/d"), 
       'act_time'      => date("H:i:s"),
       'case_link'     => ''
     );
-
+    
     echo create_tickler($activity);
   }else{
 ?>
@@ -67,7 +67,7 @@
           <button type="submit">Send E-mail</button>
         </form>
 
-        <h1>Logs:</h1>
+        <h1>Result</h1>
         <iframe name="result" id="result" src=""></iframe>
       </body>
     </html>

@@ -45,21 +45,21 @@
       $endDate = date("Ymd\THis\Z", $endDate);
 
       $calendarSubject = self::replaceVars($CalendarSubject, $v);
-
+      
       $url = "http://www.google.com/calendar/event?action=TEMPLATE".
               "&text={$calendarSubject}".
               "&dates={$beginDate}/{$endDate}".
               "&details={$v['case_link']}";
-
+              
       $msg = self::replaceVars(file_get_contents(dirname(__FILE__).'/contents.html'), $v);
 
-      $this->msg = self::str_replace('%eventUrl%',$url, $msg);
+      $this->msg = str_replace('%eventUrl%',$url, $msg);
     }
 
     function formatSubject($v){
       global $EmailSubject;
 
-      $this->subject = replaceVars($EmailSubject, $v);
+      $this->subject = self::replaceVars($EmailSubject, $v);
     }
 
     function replaceVars($str, $v){

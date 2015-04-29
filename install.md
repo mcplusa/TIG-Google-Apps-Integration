@@ -113,7 +113,7 @@ without creating an actual tickler record.
 
 ### Registering Gmail Markup
 
-* Send an email from the test page to <schema.whitelisting+sample@gmail.com> to start
+* Send an email from the test page to schema.whitelisting+sample@gmail.com to start
 the registration process.
 
 * Fill out the registration form at <https://docs.google.com/a/google.com/forms/d/1PA-vjjk3yJF7MLPOVKbIz3MBfhyma2obS8NIZ0JYx8I/viewform?pli=1>.

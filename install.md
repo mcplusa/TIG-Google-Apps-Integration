@@ -38,6 +38,10 @@ your site folder.
 have customized your templates/default.html file, you'll need to merge the 
 project's changes to this file with your existing changes.
 
+*  Log into Pika CMS with an account with system-level permissions.  Go to Site
+Map -> Extensions (under System Settings).  Enable the Google Drive integration
+extension.
+
 ### Allowing Google Drive API Connections
 
 * At Google Developers Console, <https://console.developers.google.com/>, create 

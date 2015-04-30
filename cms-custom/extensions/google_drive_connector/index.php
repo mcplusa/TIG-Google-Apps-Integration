@@ -9,6 +9,7 @@ require_once 'google-api-php-client/src/contrib/Google_DriveService.php';
 	<?php
 	define("CLIENT_ID", 'abc123');
 	define("CLIENT_SECRET", 'def456');
+	define("UNIQUE_FOLDER_ID", "ghi789");
 	?>
 */
 require_once(getcwd() . '-custom/extensions/google_drive_connector/google_drive_config.php');

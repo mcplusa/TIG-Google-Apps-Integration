@@ -42,6 +42,10 @@ project's changes to this file with your existing changes.
 Map -> Extensions (under System Settings).  Enable the Google Drive integration
 extension.
 
+*  Next, while still logged into Pika CMS, go to Site Map -> Case Tab Manager 
+(under System Settings).  Add a new case tab for the Drive file listing, it will 
+use case-drive.php.
+
 ### Allowing Google Drive API Connections
 
 * At Google Developers Console, <https://console.developers.google.com/>, create 

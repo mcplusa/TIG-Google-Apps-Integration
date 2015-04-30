@@ -88,7 +88,7 @@ the characters after "folders/":
 account provided by Google.
 
 *  Create a blank file "google_drive_config.php" in 
-"custom/extensions/google_drive_connector/".  This is the Google Drive 
+"/var/www/html/api/v1/".  This is the Google Drive 
 configuration file.  It should define the unique folder ID, Client ID and 
 Client Secret is this format:
 	

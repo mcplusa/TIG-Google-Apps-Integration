@@ -12,7 +12,7 @@ require_once 'google-api-php-client/src/contrib/Google_DriveService.php';
 	define("UNIQUE_FOLDER_ID", "ghi789");
 	?>
 */
-require_once(getcwd() . '-custom/extensions/google_drive_connector/google_drive_config.php');
+require_once('/var/www/html/api/v1/google_drive_config.php');
 
 $url_array = explode('?', 'https://'.$_SERVER ['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 define("URL", $url_array[0]);

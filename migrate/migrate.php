@@ -183,10 +183,10 @@ for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 	}
 }
 
-$sql = "SELECT COUNT(*) AS a FROM doc_storage";
+$sql = "SELECT COUNT(*) AS a FROM doc_storage WHERE doc_type='C' AND case_id IS NOT NULL";
 $result = mysql_query($sql);
 $row = mysql_fetch_assoc($result);
-echo $row['a'];
+echo $row['a'] . " documents left in the database " . "\n";
 
 
 

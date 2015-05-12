@@ -75,7 +75,7 @@ mysql_select_db($plSettings['db_name']);
 	
 add cases.google_drive_folder_id
 add doc_storage.google_drive_path
-ALTER TABLE doc_storage ADD COLUMN google_drive_path TEXT;
+ALTER TABLE doc_storage ADD COLUMN google_drive_path VARCHAR(255);
 */
 
 

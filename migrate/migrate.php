@@ -164,7 +164,7 @@ for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 		$x = $row['google_drive_folder_id'];
 	}	
 	
-	file_put_contents("/tmp/{$row['doc_name']}", gzuncompress($row['doc_data']));
+	file_put_contents("/tmp/{$row['doc_name']}", gzuncompress(stripslashes($row['doc_data'])));
 	$upload_results = $drive->uploadFile("/tmp/{$row['doc_name']}", $row['doc_name'], $x);
 	unlink("/tmp/{$row['doc_name']}");
 	

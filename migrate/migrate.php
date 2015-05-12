@@ -1,6 +1,6 @@
 <?php
 
-$site_path = '';
+$site_path = '/var/www/html/cms';
 $number_of_docs_to_migrate = 1;
 $pika_cms_username = 'jsmith';
 

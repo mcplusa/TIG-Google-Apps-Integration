@@ -132,11 +132,14 @@ while ($row = mysql_fetch_assoc($result))
 
 
 
-/* Migrate all non-folder case docs.
+/* Migrate all non-folder case docs.  This needs to be done one-by-one (or 
+	potentially in chunks) so we don't load the contents of all docs into memory
+	and melt the server.
 */
 for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 {
-	$sql = "SELECT doc_id, case_id, doc_data, doc_name FROM doc_storage "
+	$sql = "SELECT doc_id, doc_data, doc_name, google_drive_folder_id, folder_ptr FROM doc_storage "
+		. "LEFT JOIN cases USING(case_id) "
 		. "WHERE case_id IS NOT NULL AND doc_type='C' AND folder = '0' LIMIT 1";
 	$result = mysql_query($sql);
 	
@@ -147,12 +150,37 @@ for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 	}
 	
 	$row = mysql_fetch_assoc($result);
+	
+	if ($row['folder_ptr'] > 0)
+	{
+		$sql0 = "SELECT google_drive_path FROM doc_storage WHERE doc_id = '{$row['folder_ptr']}'";
+		$result0 = mysql_query($sql0);
+		$row0 = mysql_fetch_assoc($result0);
+		$x = $row0['google_drive_path'];
+	}
+	
+	else
+	{
+		$x = $row['google_drive_folder_id'];
+	}	
+	
 	file_put_contents("/tmp/{$row['doc_name']}", $row['doc_data']);
-	//$drive = new PikaDrive($pika_cms_username);
-	echo $drive->uploadFile("/tmp/{$row['doc_name']}", $row['doc_data'], $_POST['folder_id']);
+	$upload_results = $drive->uploadFile("/tmp/{$row['doc_name']}", $row['doc_name'], $x);
 	unlink("/tmp/{$row['doc_name']}");
-	echo "\n";
-	echo $row['doc_id'] . "\n";
+	
+	if (array_key_exists('kind', $upload_results) && $upload_results['kind'] == 'drive#file')
+	{
+		$sql1 = "DELETE FROM doc_storage WHERE doc_id = '{$row['doc_id']}'";
+		$result1 = mysql_query($sql1) or die('DELETE Query failed: ' . mysql_error());
+		echo "Moved " . $row['doc_id'] . " to Google Drive.\n";
+	}
+	
+	else
+	{
+		echo "Upload of doc_id {$row['doc_id']} failed.\n";
+		print_r($upload_results);
+		exit();
+	}
 }
 
 $sql = "SELECT COUNT(*) AS a FROM doc_storage";

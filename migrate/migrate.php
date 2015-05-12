@@ -69,6 +69,8 @@ create drive folder for all subfolders
 Migrate all non-folder case docs.  (This is already almost written, below.)
 	
 */
+
+
 $sql = "SELECT case_id FROM doc_storage LEFT JOIN cases USING(case_id) " 
 	. "WHERE drive_unique_id IS NULL GROUP BY case_id";
 $result = mysql_query($sql);
@@ -86,34 +88,29 @@ while ($row = mysql_fetch_assoc($result))
 	mysql_query("UPDATE cases SET google_drive_folder_id = '{$case_folder_id}' WHERE case_id = '{$row['case_id']}'");
 }
 
-/* The values in doc_storage.google_drive_path will change as this loop
-	processes, so we have to do while (1), and not the typical SELECT everything
-	method.
-*/
-while (1)  
-{
-	$sql = "SELECT doc_id, case_id, doc_data, doc_name, cases.google_drive_folder_id FROM doc_storage "
-		. "LEFT JOIN cases USING(case_id) "
-		. "WHERE doc_storage.case_id IS NOT NULL AND doc_type='C' AND folder = '1' LIMIT 1";
-	$result = mysql_query($sql);
+$sql = "SELECT doc_id, case_id, doc_data, doc_name, google_drive_folder_id, folder_ptr FROM doc_storage "
+	. "LEFT JOIN cases USING(case_id) "
+	. "WHERE doc_storage.case_id IS NOT NULL AND doc_type='C' AND folder = '1' LIMIT 1";
+$result = mysql_query($sql);
 
-	if (mysql_num_rows($result) == 0)
-	{
-		echo "No more folders found in {$plSettings['db_name']}.\n"
-		break;
-	}
-
-	$row = mysql_fetch_assoc($result);
-	
+while ($row = mysql_fetch_assoc($result))
+{	
 	if ($row['folder_ptr'] > 0)
 	{
-		
+		$sql0 = "SELECT google_drive_path FROM doc_storage WHERE doc_id = '{$row['folder_ptr']}'";
+		$result0 = mysql_query($sql0);
+		$row0 = mysql_fetch_assoc($result0);
+		$x = $row0['google_drive_path'];
 	}
 	
-	$x = $drive->createFolder($row['doc_name'], $row['google_drive_folder_id']);
+	else
+	{
+		$x = $row['google_drive_folder_id'];
+	}
+	
+	$x = $drive->createFolder($row['doc_name'], $x);
 	mysql_query("UPDATE doc_storage SET google_drive_path = '{$x['id']}' WHERE doc_id = '{$row['doc_id']}'");	
 }
-
 
 
 for ($i = 0; $i < $number_of_docs_to_migrate; $i++)

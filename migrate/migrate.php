@@ -2,13 +2,15 @@
 
 $site_path = '/var/www/html/cms';
 $pika_cms_username = 'jsmith';
-$time_zone = 'America/New_York';
 
 // Source Code Starts Here *********************************************
 
 
 set_time_limit(0);
 ini_set('memory_limit','999M');
+
+
+$time_zone = 'America/New_York';
 
 if (function_exists('date_default_timezone_set')) 
 {

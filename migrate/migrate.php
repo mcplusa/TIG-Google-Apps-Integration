@@ -1,7 +1,6 @@
 <?php
 
 $site_path = '/var/www/html/cms';
-$number_of_docs_to_migrate = 1;
 $pika_cms_username = 'jsmith';
 $time_zone = 'America/New_York';
 
@@ -35,6 +34,7 @@ require_once($config_path);
 $library_path = $site_path . '-custom/extensions/google_drive_connector/index.php';
 require_once($library_path);
 
+$number_of_docs_to_migrate = 1000000;
 
 
 function folder_search_or_create($folder_name, $parent_id, $username)

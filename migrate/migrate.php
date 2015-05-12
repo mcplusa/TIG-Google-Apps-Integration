@@ -105,7 +105,7 @@ while ($row = mysql_fetch_assoc($result))
 
 /*  create drive folder for all subfolders
 */
-$sql = "SELECT doc_id, case_id, doc_data, doc_name, google_drive_folder_id, folder_ptr FROM doc_storage "
+$sql = "SELECT doc_id, doc_name, google_drive_folder_id, folder_ptr FROM doc_storage "
 	. "LEFT JOIN cases USING(case_id) "
 	. "WHERE doc_storage.case_id IS NOT NULL AND doc_type='C' AND folder = '1'";
 $result = mysql_query($sql);

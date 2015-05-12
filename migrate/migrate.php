@@ -60,17 +60,13 @@ mysql_select_db($plSettings['db_name']);
 add cases.google_drive_folder_id
 add doc_storage.google_drive_path
 ALTER TABLE doc_storage ADD COLUMN google_drive_path TEXT;
-
-create drive folder for all case_id's in SELECT case_id FROM doc_storage GROUP by case_id;
-Save the unique_id
-
-create drive folder for all subfolders
-
-Migrate all non-folder case docs.  (This is already almost written, below.)
-	
 */
 
 
+
+/* create drive folder for all case_id's in SELECT case_id FROM doc_storage GROUP by case_id;
+Save the unique_id
+*/
 $sql = "SELECT case_id FROM doc_storage LEFT JOIN cases USING(case_id) " 
 	. "WHERE drive_unique_id IS NULL GROUP BY case_id";
 $result = mysql_query($sql);
@@ -88,6 +84,10 @@ while ($row = mysql_fetch_assoc($result))
 	mysql_query("UPDATE cases SET google_drive_folder_id = '{$case_folder_id}' WHERE case_id = '{$row['case_id']}'");
 }
 
+
+
+/*  create drive folder for all subfolders
+*/
 $sql = "SELECT doc_id, case_id, doc_data, doc_name, google_drive_folder_id, folder_ptr FROM doc_storage "
 	. "LEFT JOIN cases USING(case_id) "
 	. "WHERE doc_storage.case_id IS NOT NULL AND doc_type='C' AND folder = '1' LIMIT 1";
@@ -113,6 +113,9 @@ while ($row = mysql_fetch_assoc($result))
 }
 
 
+
+/* Migrate all non-folder case docs.
+*/
 for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 {
 	$sql = "SELECT doc_id, case_id, doc_data, doc_name FROM doc_storage "

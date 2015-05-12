@@ -3,8 +3,24 @@
 $site_path = '/var/www/html/cms';
 $number_of_docs_to_migrate = 1;
 $pika_cms_username = 'jsmith';
+$time_zone = 'America/New_York';
 
 // Source Code Starts Here *********************************************
+
+
+set_time_limit(0);
+ini_set('memory_limit','999M');
+
+if (function_exists('date_default_timezone_set')) 
+{
+	if (!$time_zone) 
+	{
+		$time_zone = 'America/New_York';
+	}
+	
+	date_default_timezone_set($time_zone);
+}
+
 
 $config_path = $site_path . '-custom/config/settings.php';
 
@@ -23,7 +39,7 @@ require_once($library_path);
 
 function folder_search_or_create($folder_name, $parent_id, $username)
 {
-	//$drive = new PikaDrive($username);
+	$drive = new PikaDrive($username);
 	$sub_folders = $drive->listFiles($parent_id);
 	
 	foreach ($sub_folders as $sub_folder)
@@ -68,7 +84,7 @@ ALTER TABLE doc_storage ADD COLUMN google_drive_path TEXT;
 Save the unique_id
 */
 $sql = "SELECT case_id FROM doc_storage LEFT JOIN cases USING(case_id) " 
-	. "WHERE drive_unique_id IS NULL GROUP BY case_id";
+	. "WHERE case_id IS NOT NULL AND google_drive_folder_id IS NULL GROUP BY case_id";
 $result = mysql_query($sql);
 
 while ($row = mysql_fetch_assoc($result))
@@ -82,6 +98,7 @@ while ($row = mysql_fetch_assoc($result))
 	// inside the case_sub_folder (which is inside the root folder).
 	$case_folder_id = folder_search_or_create($row['case_id'], $case_sub_folder_id, $pika_cms_username);
 	mysql_query("UPDATE cases SET google_drive_folder_id = '{$case_folder_id}' WHERE case_id = '{$row['case_id']}'");
+	echo "Created folder for case_id {$row['case_id']}\n";
 }
 
 
@@ -90,7 +107,7 @@ while ($row = mysql_fetch_assoc($result))
 */
 $sql = "SELECT doc_id, case_id, doc_data, doc_name, google_drive_folder_id, folder_ptr FROM doc_storage "
 	. "LEFT JOIN cases USING(case_id) "
-	. "WHERE doc_storage.case_id IS NOT NULL AND doc_type='C' AND folder = '1' LIMIT 1";
+	. "WHERE doc_storage.case_id IS NOT NULL AND doc_type='C' AND folder = '1'";
 $result = mysql_query($sql);
 
 while ($row = mysql_fetch_assoc($result))
@@ -109,7 +126,8 @@ while ($row = mysql_fetch_assoc($result))
 	}
 	
 	$x = $drive->createFolder($row['doc_name'], $x);
-	mysql_query("UPDATE doc_storage SET google_drive_path = '{$x['id']}' WHERE doc_id = '{$row['doc_id']}'");	
+	mysql_query("UPDATE doc_storage SET google_drive_path = '{$x['id']}' WHERE doc_id = '{$row['doc_id']}'");
+	echo "Created folder named {$row['doc_name']}\n";
 }
 
 
@@ -124,7 +142,7 @@ for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 	
 	if (mysql_num_rows($result) == 0)
 	{
-		echo "No more documents found in {$plSettings['db_name']}.\n"
+		echo "No more documents found in {$plSettings['db_name']}.\n";
 		break;
 	}
 	

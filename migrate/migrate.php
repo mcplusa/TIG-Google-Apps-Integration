@@ -170,9 +170,9 @@ for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 	
 	if (array_key_exists('kind', $upload_results) && $upload_results['kind'] == 'drive#file')
 	{
-		//$sql1 = "DELETE FROM doc_storage WHERE doc_id = '{$row['doc_id']}'";
-		//$result1 = mysql_query($sql1) or die('DELETE Query failed: ' . mysql_error());
-		echo "Copied " . $row['doc_id'] . " to Google Drive.\n";
+		$sql1 = "DELETE FROM doc_storage WHERE doc_id = '{$row['doc_id']}'";
+		$result1 = mysql_query($sql1) or die('DELETE Query failed: ' . mysql_error());
+		echo "Moved " . $row['doc_id'] . " to Google Drive.\n";
 	}
 	
 	else

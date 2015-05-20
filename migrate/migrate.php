@@ -60,6 +60,12 @@ function folder_search_or_create($folder_name, $parent_id, $username)
 }
 
 
+function print_diagnostic($x)
+{
+	print_r($x);
+	echo "\nError retrieving folder with doc_id of '{$x['folder_ptr']}'\n";
+}
+
 $drive = new PikaDrive($pika_cms_username);
 
 if (!$drive->check())
@@ -156,7 +162,7 @@ for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 	if ($row['folder_ptr'] > 0)
 	{
 		$sql0 = "SELECT google_drive_path FROM doc_storage WHERE doc_id = '{$row['folder_ptr']}'";
-		$result0 = mysql_query($sql0) or echo "[{$row['folder_ptr']}] Error retrieving folder with doc_id of '{$row['folder_ptr']}'\n";
+		$result0 = mysql_query($sql0) or print_diagnostic($row);
 		$row0 = mysql_fetch_assoc($result0);
 		$x = $row0['google_drive_path'];
 	}

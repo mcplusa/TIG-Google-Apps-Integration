@@ -156,7 +156,7 @@ for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 	if ($row['folder_ptr'] > 0)
 	{
 		$sql0 = "SELECT google_drive_path FROM doc_storage WHERE doc_id = '{$row['folder_ptr']}'";
-		$result0 = mysql_query($sql0);
+		$result0 = mysql_query($sql0) or echo "Error retrieving folder with doc_id of '{$row['folder_ptr']}'\n";
 		$row0 = mysql_fetch_assoc($result0);
 		$x = $row0['google_drive_path'];
 	}

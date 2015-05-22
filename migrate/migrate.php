@@ -196,10 +196,17 @@ for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 $sql = "SELECT COUNT(*) AS a FROM doc_storage WHERE doc_type='C' AND case_id IS NOT NULL";
 $result = mysql_query($sql);
 $row = mysql_fetch_assoc($result);
-//echo $row['a'] . " documents left in the database " . "\n";
+
+if ($row['a'] == 0)
+{
+	echo "All case documents have been moved to Drive, now cleaning up leftover subfolders... ";
+	$sql = "DELETE FROM doc_storage WHERE case_id IS NOT NULL AND google_drive_path IS NOT NULL AND doc_type='C' AND folder = '1'";
+	$result = mysql_query($sql);
+	$row = mysql_fetch_assoc($result);
+	echo "Done.\n";
+}
+
 echo "Finished running.\n";
-
-
 exit();
 	
 ?>

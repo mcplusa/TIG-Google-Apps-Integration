@@ -116,11 +116,13 @@ while ($row = mysql_fetch_assoc($result))
 */
 $sql = "SELECT doc_id, doc_name, google_drive_folder_id, folder_ptr FROM doc_storage "
 	. "LEFT JOIN cases USING(case_id) "
-	. "WHERE doc_storage.case_id IS NOT NULL AND doc_type='C' AND folder = '1'";
+	. "WHERE doc_storage.case_id IS NOT NULL AND google_drive_path IS NULL AND doc_type='C' AND folder = '1'";
 $result = mysql_query($sql);
 
 while ($row = mysql_fetch_assoc($result))
 {	
+	echo "Starting subfolder id {$row['doc_id']}... ";
+
 	if ($row['folder_ptr'] > 0)
 	{
 		$sql0 = "SELECT google_drive_path FROM doc_storage WHERE doc_id = '{$row['folder_ptr']}'";
@@ -136,7 +138,7 @@ while ($row = mysql_fetch_assoc($result))
 	
 	$x = $drive->createFolder($row['doc_name'], $x);
 	mysql_query("UPDATE doc_storage SET google_drive_path = '{$x['id']}' WHERE doc_id = '{$row['doc_id']}'");
-	echo "Created folder named {$row['doc_name']}\n";
+	echo "Created folder [{$row['doc_id']}] named {$row['doc_name']}\n";
 }
 
 
@@ -195,10 +197,17 @@ for ($i = 0; $i < $number_of_docs_to_migrate; $i++)
 $sql = "SELECT COUNT(*) AS a FROM doc_storage WHERE doc_type='C' AND case_id IS NOT NULL";
 $result = mysql_query($sql);
 $row = mysql_fetch_assoc($result);
-//echo $row['a'] . " documents left in the database " . "\n";
+
+if ($row['a'] == 0)
+{
+	echo "All case documents have been moved to Drive, now cleaning up leftover subfolders... ";
+	$sql = "DELETE FROM doc_storage WHERE case_id IS NOT NULL AND google_drive_path IS NOT NULL AND doc_type='C' AND folder = '1'";
+	$result = mysql_query($sql);
+	$row = mysql_fetch_assoc($result);
+	echo "Done.\n";
+}
+
 echo "Finished running.\n";
-
-
 exit();
 	
 ?>

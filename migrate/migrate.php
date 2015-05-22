@@ -120,6 +120,8 @@ $result = mysql_query($sql);
 
 while ($row = mysql_fetch_assoc($result))
 {	
+	echo "Starting subfolder id {$row['doc_id']}... ";
+
 	if ($row['folder_ptr'] > 0)
 	{
 		$sql0 = "SELECT google_drive_path FROM doc_storage WHERE doc_id = '{$row['folder_ptr']}'";
@@ -135,7 +137,7 @@ while ($row = mysql_fetch_assoc($result))
 	
 	$x = $drive->createFolder($row['doc_name'], $x);
 	mysql_query("UPDATE doc_storage SET google_drive_path = '{$x['id']}' WHERE doc_id = '{$row['doc_id']}'");
-	echo "Created folder named {$row['doc_name']}\n";
+	echo "Created folder [{$row['doc_id']}] named {$row['doc_name']}\n";
 }
 
 

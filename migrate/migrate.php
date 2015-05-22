@@ -97,6 +97,7 @@ $result = mysql_query($sql);
 
 while ($row = mysql_fetch_assoc($result))
 {
+	echo "Starting folder for case_id {$row['case_id']}... ";
 	$case_sub_folder_name = str_pad(substr($row['case_id'], -3), 3, '0', STR_PAD_LEFT);	
 	// Look for the sub_folder where this case's folder will go.  If it doesn't
 	// exist, create it.

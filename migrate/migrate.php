@@ -115,7 +115,7 @@ while ($row = mysql_fetch_assoc($result))
 */
 $sql = "SELECT doc_id, doc_name, google_drive_folder_id, folder_ptr FROM doc_storage "
 	. "LEFT JOIN cases USING(case_id) "
-	. "WHERE doc_storage.case_id IS NOT NULL AND google_drive_path IS NOT NULL AND doc_type='C' AND folder = '1'";
+	. "WHERE doc_storage.case_id IS NOT NULL AND google_drive_path IS NULL AND doc_type='C' AND folder = '1'";
 $result = mysql_query($sql);
 
 while ($row = mysql_fetch_assoc($result))

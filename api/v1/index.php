@@ -18,43 +18,19 @@
 $site_folder_name = 'cms';
 $time_zone = 'America/New_York';
 
-/*
-$http_user = 'api';
-$http_password = 'na5us+wr';
-*/
 
 // Definitions
 define('LSNC_API_NAME','LSNC Google Apps API');
 define('LSNC_API_VERSION','1');
 define('LSNC_API_REVISION','0');
 
+
 // CORS HTTP headers
 header('Access-Control-Allow-Origin: https://mail.google.com');
 header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Headers: accept, authorization');
+header('Access-Control-Allow-Headers: accept, authorization, content-type');
 header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
 
-// HTTP Authentication
-/*
-if (!isset($_SERVER['PHP_AUTH_USER'])) 
-{
-    
-    header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
-    header('HTTP/1.0 204 No Content');
-    echo 'HTTP/1.0 204 No Content';
-    exit;
-}
-
-else 
-{
-	if($_SERVER['PHP_AUTH_USER'] != $http_user || $_SERVER['PHP_AUTH_PW'] != $http_password)
-	{
-		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
-		header('HTTP/1.0 401 Unauthorized');
-		exit();
-	}
-}
-*/
 
 // Database variables
 $plSettings = array();
@@ -157,7 +133,7 @@ function get_value_numeric($field)
 function next_id($sequence)
 {
 	// VARIABLES
-	$safe_sequence = mysql_escape_string($sequence);
+	$safe_sequence = mysql_real_escape_string($sequence);
 	$next_id = null;
 	
 	mysql_query("LOCK TABLES counters WRITE") or trigger_error('counters table lock failed');
@@ -417,16 +393,19 @@ class restResourceList extends restResource
 class restCaseList extends restResourceList 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id";
+	protected $get_sql = "SELECT case_id, number AS case_number, open_date, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id";
 	
-	function get()
+	function get($dummy_not_used = '')
 	{
 		$extra_sql = '';
 		$safe_q = get_value('q');
-		
-		if ($safe_q)
+		$safe_u = get_value('u');
+
+		if (($safe_q) || ($safe_u))
 		{
-			$extra_sql = "WHERE number LIKE '%{$safe_q}%'";
+			$extra_sql = " WHERE number LIKE '%{$safe_q}%'";
+			if($safe_u)
+				$extra_sql.= " and users.username = '{$safe_u}'";
 		}
 
 		parent::get($extra_sql);
@@ -440,7 +419,7 @@ class restCaseList extends restResourceList
 class restCase extends restResource 
 {
 	protected $table = 'cases';
-	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id WHERE case_id=";
+	protected $get_sql = "SELECT case_id, number AS case_number, NULL AS case_name, CONCAT(contacts.last_name, ', ', IFNULL(contacts.first_name, '')) as client_name, status as case_status, CONCAT(users.last_name, ', ', users.first_name) AS advocate, google_drive_folder_id FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id LEFT JOIN users ON cases.user_id=users.user_id WHERE case_id=";
 	protected $data_fields = 'case_id, number, status';
 
 	function post_values()
@@ -448,6 +427,20 @@ class restCase extends restResource
 		$x = post_value('case_number') . ', 1';
 		
 		return $x;
+	}
+	
+	function put()
+	{
+		$x = file_get_contents("php://input");
+		$y = json_decode($x, TRUE);
+		$z = mysql_real_escape_string($y['google_drive_folder_id']);
+		$sql = "UPDATE {$this->table} SET google_drive_folder_id = '{$z}'"; 
+		$sql .= " WHERE case_id = " . mysql_real_escape_string($this->id);		
+		$result = mysql_query($sql) or server_error(mysql_error($result));
+		
+		$this->transmitJson();
+		
+		return;
 	}
 }
 
@@ -460,7 +453,7 @@ class restCaseNoteList extends restResourceList
 	protected $table = 'activities';
 	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, activities.notes AS notes, hours, CONCAT(users.last_name, ', ', users.first_name) AS staff, funding AS funding_source FROM activities LEFT JOIN users ON activities.user_id=users.user_id WHERE case_id IS NOT NULL";
 	
-	function get()
+	function get($dummy_not_used = '')
 	{
 		$extra_sql = '';
 		$safe_case_id = get_value_numeric('case_id');
@@ -481,31 +474,28 @@ class restCaseNoteList extends restResourceList
 class restCaseNote extends restResource 
 {
 	protected $table = 'activities';
-	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, activities.notes AS notes, hours, CONCAT(users.last_name, ', ', users.first_name) AS staff, funding AS funding_source FROM activities LEFT JOIN users ON activities.user_id=users.user_id WHERE act_id=";
-	protected $data_fields = 'act_id, case_id, summary, notes, hours, created, act_date, category, user_id, funding';
+	protected $get_sql = "SELECT act_id AS case_note_id, case_id, summary, notes, hours, funding AS funding_source FROM activities WHERE act_id=";
+	protected $data_fields = 'act_id, case_id, summary, notes, act_date, act_time, act_type, last_changed';
+
 	
 	function post_values()
-	{
-		$x = post_value('case_id') . ',';
-		$x .= post_value('summary') . ',';
-		$x .= post_value('notes') . ',';
-		$x .= post_value('hours') . ',';
-		$x .= post_value('created') . ',';
-		$x .= post_value('act_date') . ',';
-		$x .= post_value('category') . ',';
-		$x .= post_value('user_id') . ',';
-		$x .= post_value('funding');
-		
-		return $x;
-	}
+  {
+      $x = post_value("case_id") . ",";
+      $x .= post_value("summary") . ",";
+      $x .= post_value("notes") . ",";
+      $x .= "'" . date("Y-n-j") . "',";
+      $x .= "'" . date("H:i:s") . "',";
+      $x .= "'N',";
+      $x .= "'" . date("Y-n-j") . " " . date("H:i:s") . "'";
+      
+      return $x;
+  }
 }
-
-
-
 //mysql_connect(DB_HOST,DB_USER,DB_PASS);
 //mysql_select_db(DB_NAME);
 
 // OAuth authentication
+/*
 $http_headers = apache_request_headers();
 
 if (!isset($http_headers['Authorization']))
@@ -533,6 +523,41 @@ if (mysql_num_rows($result) != 1)
 {
 	http_response_code(401);
 	exit();
+}
+*/
+
+
+// HTTP Authentication
+if (!isset($_SERVER['PHP_AUTH_USER'])) 
+{
+    
+    header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '"');
+    header('HTTP/1.0 204 No Content');
+    echo 'HTTP/1.0 204 No Content';
+    exit;
+}
+
+else if (!isset($_SERVER['PHP_AUTH_PW'])) 
+{
+	header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
+	header('HTTP/1.0 401 Unauthorized');
+	exit();
+}
+
+else 
+{
+	$safe_username = mysql_real_escape_string($_SERVER['PHP_AUTH_USER']);
+	$safe_password_hash = mysql_real_escape_string(md5($_SERVER['PHP_AUTH_PW']));
+	
+	$sql = "SELECT user_id FROM users WHERE enabled=1 AND username='{$safe_username}' AND password='{$safe_password_hash}'";
+	$result = mysql_query($sql) or server_error("An error was encountered.");
+	
+	if (mysql_num_rows($result) != 1)
+	{
+		header('WWW-Authenticate: Basic realm="' . LSNC_API_NAME . '" stale="FALSE"');
+		header('HTTP/1.0 401 Unauthorized');
+		exit();
+	}
 }
 
 

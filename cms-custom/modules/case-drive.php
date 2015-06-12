@@ -34,8 +34,8 @@ if (strlen($case1->google_drive_folder_id) == 0 && !file_exists(getcwd() . "-cus
 	$clean_username = htmlspecialchars($auth_row['username']);
 	
 	$C .= '<p>This case does not have a Google Drive folder. you need to connect your Pika CMS account to your Google account. To do so, <a class=""';
-	$C .= ' onClick=\'window.open("/api/v1/drive/auth?username='.$clean_username.'", "Request for Authorization", "width=450, height=500, scrollbars=yes");\'';
-	$C .= '><strong>click here to log into Google Drive</strong></a>.</p>';
+    $C .= ' onClick=\'window.open("'.$base_url.'/pm.php/google_drive_connector/auth.php?action=authenticate", "Request for Authorization", "width=450, height=500, scrollbars=yes");\'';
+    $C .= '><strong>click here to log into Google Drive</strong></a>.</p>';
 	$C .= '<p><em>Please reload or refresh this page once you have logged in</em>.</p>';
 	
 }
@@ -86,8 +86,8 @@ if (file_exists(getcwd() . "-custom/extensions/google_drive_connector/tokens/{$a
 		<div class="span4 disconnect">';
 
 	// Add a "Log out of Google Drive" button.
-	$C .= '<a class="btn" title="Disconnect your Pika CMS account from Google Drive." href="/api/v1/drive/unauthorize?username=' ;
-	$C .= htmlspecialchars($auth_row['username']);
+    $C .= '<a class="btn" title="Disconnect your Pika CMS account from Google Drive." href="'.$base_url.'/pm.php/google_drive_connector/auth.php?action=unauthorize&username=' ;
+    $C .= htmlspecialchars($auth_row['username']);
 	$C .= '" target="_blank">Disconnect Drive</a>';
 
 	/* TODO:  Use this button once Pika CMS is using a version of Bootstrap 
@@ -106,7 +106,7 @@ else
 	$clean_username = htmlspecialchars($auth_row['username']);
 	
 	$C .= '<p>To upload and view case-related files, you need to connect your Pika CMS account to your Google account. To do so, <a class=""';
-	$C .= ' onClick=\'window.open("/api/v1/drive/auth?username='.$clean_username.'", "Request for Authorization", "width=450, height=500, scrollbars=yes");\'';
+    $C .= ' onClick=\'window.open("'.$base_url.'/pm.php/google_drive_connector/auth.php?action=authenticate", "Request for Authorization", "width=450, height=500, scrollbars=yes");\'';
 	$C .= '><strong>click here to log into Google Drive</strong></a>.</p>';
 	$C .= '<p><em>Please reload or refresh this page once you have logged in</em>.</p>';
 }

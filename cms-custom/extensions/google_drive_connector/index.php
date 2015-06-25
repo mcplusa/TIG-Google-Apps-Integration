@@ -16,13 +16,10 @@ require_once('/var/www/html/api/v1/google_drive_config.php');
 
 $url_array = explode('?', 'https://'.$_SERVER ['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 define("URL", $url_array[0]);
-define("TOKENS_PATH", dirname(__FILE__) . '/' . "tokens/");
-
 
 class PikaDrive {
   private $gClient;
   private $token;
-  private $tokenPath = TOKENS_PATH;
 
   function __construct($username = null){
     $this->gClient = new Google_Client();
@@ -37,23 +34,25 @@ class PikaDrive {
   }
 
   function setToken($username, $token = ''){
-    $tokenPath = $this->tokenPath . $username;
-
+	$clean_token = mysql_real_escape_string($token);
+	$clean_username = mysql_real_escape_string($username);
+	
     if(isset($token) && !empty($token)){
       $this->token = $this->gClient->authenticate($token);
-      file_put_contents($tokenPath, $this->token);
+      $result = mysql_query("UPDATE users SET google_drive_token='{$clean_token}' WHERE username='{$clean_username}'");
     }else{
-      if(file_exists($tokenPath)){
-        $this->token = file_get_contents($tokenPath);
-        return true;
-      }
+      $result = mysql_query("SELECT google_drive_token FROM users WHERE username='{$clean_username}'");
+      $row = mysql_fetch_assoc($result);
+      $this->token = $row['google_drive_token'];
+      return true;
     }
 
     return false;
   }
 
   function unauthorize($username){
-    unlink($this->tokenPath . $username);
+	$clean_username = mysql_real_escape_string($username);
+    $result = mysql_query("UPDATE users SET google_drive_token=NULL WHERE username='{$clean_username}'");
   }
 
   function authenticate(){
@@ -134,11 +133,13 @@ class PikaDrive {
   }
   
   function isAuthenticated($username){
-    $tokenPath = $this->tokenPath . $username;
-
-	if(file_exists($tokenPath)){
+	$clean_username = mysql_real_escape_string($username);
+    $result = mysql_query("SELECT google_drive_token FROM users WHERE username='{$clean_username}' AND google_drive_token IS NOT NULL");
+    
+    if (mysql_num_rows($result) == 1)
+    {
 	    return true;
-	}
+    }
 
     return false;
   }

@@ -68,9 +68,6 @@ or select an existing project.
 * Make a note of your Client ID and Client Secret values, you will need them
 later.
 
-* Create a folder named "tokens" in custom/extensions/google_drive_connector/,
-with folder permissions set to 777.
-
 ### Creating a Google Drive Folder to Store the Documents
 
 *  Create your program's root CMS documents folder in Google Drive.  This needs 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>To Pika Options</title>
+		<link rel="stylesheet" type="text/css" href="styles/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="styles/main.css">
+	</head>
+	<body>
+		<center>
+			<div id="status"></div>
+		</center>
+		<div id="options-page">
+			<h4><i class="fa fa-wrench"></i>&nbsp; Gmail to Pika Configuration</h4>
+			<div class="form-group">
+				<label for="url" class="control-label">Pika CMS URL</label>
+				<input type="text" class="form-control" id="url" placeholder="Pika CMS URL" data-toggle="tooltip" data-placement="top" title="You must inform a valid URL!">
+			</div>
+			<div class="form-group">
+				<label for="user" class="control-label">Pika User</label>
+				<input type="text" class="form-control" id="user" placeholder="Pika User" data-toggle="tooltip" data-placement="top" title="You must inform a valid Username!">
+			</div>
+			<div class="form-group">
+				<label for="password" class="control-label" >Pika Password</label>
+				<input type="password" class="form-control" id="password" placeholder="Pika Password" data-toggle="tooltip" data-placement="top" title="You must inform a valid password!">
+			</div>
+			<div class="form-group">
+				<label for="email_model" class="control-label" >Email Content to be Copied</label>
+
+				<i data-toggle="popover" title="Email Converter Help" data-content="
+					You can edit the email converter model. You could use these properties to get values dynamically:<br />
+					<strong>#Header:</strong> Get email's header<br />
+					<strong>#body:</strong> Get email's body content<br />
+					<strong>#subject:</strong> Get email's subject
+					"
+				class="fa fa-question-circle" ></i>
+				
+				<textarea class="form-control" id="email_model" placeholder="Define how emails content will be copied to Pika" rows="4" data-toggle="tooltip" data-placement="top" title="Email converter should not be empty!">#header
+#body</textarea>
+			</div>
+			<button type="submit" class="btn btn-primary" id="save">Save</button>
+		</div>
+
+		<div class="footer">
+			<a href="https://raw.githubusercontent.com/mcplusa/TIG-Google-Apps-Integration/master/LICENSE">License</a>
+			<version>Version <n></n></version>
+		</div>
+		<script src="scripts/vendorscripts.js"></script>
+		<script src="scripts/options.js"></script>
+	</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Gmail-to-pika by MC+A</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Gmail To Pika</h1>
+      <h2 class="project-tagline">Chrome extension to integrate your Gmail and Pika accounts</h2>
+      <a href="https://github.com/mcplusa/gmail-to-pika" class="btn">View on GitHub</a>
+      <a href="https://github.com/mcplusa/gmail-to-pika/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/mcplusa/gmail-to-pika/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="gmail-to-pika---attach-your-email-to-pika-in-a-couple-of-clicks" class="anchor" href="#gmail-to-pika---attach-your-email-to-pika-cms-in-a-couple-of-clicks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gmail to Pika - Attach your email to the Pika CMS in a couple of clicks</h1>
+
+<p><img align="right" height="164" src="https://s3.amazonaws.com/download.mcplusa.com/public+assets/gmail-to-pika/logo128.png"></p>
+
+<hr>
+
+<p><a href="https://chrome.google.com/webstore/detail/gmail-to-pika/mnapnnkgdnkpobhafdgclljfihpobnnf?hl=en">Extension for Google Chrome</a> that integrates your Gmail inbox with the <a href="http://www.pikasoftware.com/">Pika CMS</a>.</p>
+
+<p>This extension adds a button to your Gmail page that allows to easily attach your received and/or send emails to Pika in a couple of clicks.</p>
+
+<p><strong>Do you like this project? Check out what other projects we have at <a href="http://mcplusa.com">MC+A</a></strong></p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Using the Gmail To Pika extension is very easy. Just install it as any other Google Chrome extension, set your Pika system URL, and use it.</p>
+
+<h3>
+<a id="step-1-install-the-extension" class="anchor" href="#step-1-install-the-extension" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 1. Install the Extension</h3>
+
+<p><a href="https://chrome.google.com/webstore/detail/gmail-to-pika/mnapnnkgdnkpobhafdgclljfihpobnnf?hl=en">Install the extension</a> from the official Chrome Web Store.</p>
+
+<h3>
+<a id="step-2-set-up-pika" class="anchor" href="#step-2-set-up-pika" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 2. Set up your Pika system</h3>
+
+<p>Go to chrome://extensions and search for <em>Gmail to Pika</em>. Click on Options and enter your Pika CMS URL, credentials and configuration for your Email Content.
+</p>
+<center>
+  <img src="https://s3.amazonaws.com/download.mcplusa.com/public+assets/gmail-to-pika/gmail-to-pika-send.png" width="291" height="385" border="1" alt="Extension Options">
+</center>
+
+<h3>
+<a id="step-3-attach-your-email-to-pika" class="anchor" href="#step-3-attach-your-email-to-pika" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 3. Attach your email to Pika</h3>
+
+<p>Now when you go to your <a href="https://mail.google.com">Gmail</a>, you'll see a Red Button on your email. Click it and you'll be able to search for Pika objects. Select the one that you want to attach your email to, and follow the instructions.</p>
+
+<p></p>
+<center>
+  <img src="https://s3.amazonaws.com/download.mcplusa.com/public+assets/gmail-to-pika/gmail-to-pika-email.png" width="531" height="300" border="1" alt="Extension Options"><br/>
+  <img src="https://s3.amazonaws.com/download.mcplusa.com/public+assets/gmail-to-pika/gmail-to-pika-attach.png" width="478" height="300" border="1" alt="Extension Options"><br/>
+</center>
+
+
+<h2>
+<a id="build-from-source" class="anchor" href="#build-from-source" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build from Source</h2>
+
+<p>To build this project you'll need to install <a href="http://bower.io/">Bower</a> and <a href="http://gruntjs.com/">Grunt</a>:</p>
+
+<pre><code>$ npm install -g bower
+$ npm install -g grunt-cli
+</code></pre>
+
+<p>Once you finish setting up your environment, install the required dependencies</p>
+
+<pre><code>$ npm install
+$ bower install
+</code></pre>
+
+<p>And build the project (WIP)</p>
+
+<pre><code>$ grunt build
+</code></pre>
+
+<h2>
+<a id="running-from-source" class="anchor" href="#running-from-source" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running from Source</h2>
+
+<p>To run the extension on Google Chrome:</p>
+
+<pre><code>Go to chrome://extensions
+Clic on "Load unpacked extension..."
+Select the directory of the project
+</code></pre>
+
+<h2>
+<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
+
+<p>Run the Grunt Test task</p>
+
+<pre><code>$ grunt test
+</code></pre>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/mcplusa/gmail-to-pika">Gmail-to-pika</a> is maintained by <a href="https://github.com/mcplusa">MC+A</a>.</span>
+      </footer>
+
+    </section>
+
+
+  </body>
+</html>

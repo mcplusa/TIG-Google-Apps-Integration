@@ -1,0 +1,63 @@
+<div class="modal fade" id="gm-integration-topika" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title"><i class="fa fa-paper-plane"></i> to Pika</h4>
+        <form id="gm-integration-search" class="modal-title-search">
+            <input type="text" name="search" id="search-input" placeholder="Search for a Case..."/>
+            <button type="submit" class="search-button" onclick="gmailToPika.showAllCases(); gmailToPika.search(); return false;"><i class="fa fa-search"></i></button>
+            <button type="button" class="search-button" id="searchSpin" style="display: none;"><i class="fa fa-refresh fa-spin"></i></button>
+        </form>
+      </div>
+      <div class="modal-body">
+        <p id="introduction">
+            You can copy this Gmail message and its file attachments to any open Pika case record. By default, the entire Gmail thread will be copied. If you want to copy only this individual message, be sure to uncheck "Send entire message thread," below. If you want to also copy over any file attachments, click on the "Add attachments" button.
+        </p>
+        <div id="cases">
+            <div id="toolbar">
+                <button type="button" class="btn btn-xs" id="all-cases" onclick="gmailToPika.showAllCases(true)">
+                    All Cases
+                </button>
+                <button type="button" class="btn btn-xs" id="my-cases" onclick="gmailToPika.showAllCases(false)">
+                    My Cases
+                </button>
+            </div>
+            <table id="cases-results"
+                data-class="table table-hover"
+                data-sort-name="advocate"
+                data-click-to-select="true"
+                data-toolbar="#toolbar">
+                <thead>
+                    <tr>
+                        <th data-checkbox="true"></th>
+                        <th data-field="client_name" data-sortable="true">Client Name </th>
+                        <th data-field="case_number" data-sortable="true">Case Number </th>
+                        <th data-field="open_date" data-sortable="true">Open Date </th>
+                        <th data-field="advocate" data-sortable="true">Advocate </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <ul class="list-unstyled text-left">
+            <li><input type="checkbox" id="send-entire-tread" checked="checked"><label for="send-entire-tread">&nbsp;Copy entire thread message.</label></input>
+            </li>
+        </ul>
+        <button class="btn btn-info" id="attachment" style="float: left;" onclick="gmailToPika.toggleAttachments();">
+          <i class="fa fa-paperclip"></i>
+          <span class="text">Add Attachments</span>
+        </button>
+        <button class="btn btn-danger" id="copy">
+            <i class="fa fa-refresh fa-spin" id="copySpin"></i>
+            <span class="text">Copy to Case Notes</span>
+        </button>
+
+        <div class="attachments">
+            <ul class="list-group"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

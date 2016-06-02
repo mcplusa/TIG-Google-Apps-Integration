@@ -1,0 +1,68 @@
+.footer {
+  padding: 2px 5px;
+  border-top: 1px solid #eee;
+  font-size: 10.5px !important;
+}
+
+.footer version {
+  float: right;
+}
+
+#options-page {
+  padding: 20px;
+}
+
+#status {
+  background-color: #286090;
+  color: white;
+  font-weight: 500;
+  font-size: 16px; 
+  position: absolute;
+  width: 100%; }
+
+.modal-header,
+.modal-body,
+.modal-footer {
+  display: inline-block;
+  width: 100%; }
+
+#search-input {
+  padding: 5px; }
+
+#introduction {
+  position: relative;
+  top: 30%; 
+  text-align: justify; }
+
+.search-button {
+  border: none;
+  background: none; }
+
+.modal-title,
+.modal-title-search {
+  display: inline-block;
+  margin-right: 10px; }
+
+.modal-header,
+.modal-footer {
+  border: none; }
+
+.modal-body {
+  overflow: auto;
+  height: 200px;
+  width: 100%; }
+
+.fade.in {
+  color: black;
+  cursor: auto;
+  font-size: 14px;
+  white-space: normal; }
+
+.attachments {
+  float: left;
+  width: 100%;
+  max-height: 60px;
+  height: auto;
+  margin-top: 10px;
+  text-align: left;
+  overflow: auto; }

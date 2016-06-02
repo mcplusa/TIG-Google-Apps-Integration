@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>UX Element Demo for LSNC</title>
+	    <link rel="stylesheet" href="styles/font-awesome.min.css" />
+	    <link rel="stylesheet" href="styles/bootstrap.min.css"/>
+	    <link rel="stylesheet" href="styles/main.css"/>
+
+    </head>
+    <body>
+    	<!-- Gmail to Pika Button -->
+    	<p>Example HTML - Launch initial Modal</p>
+    	<p><button type="button" data-toggle="modal" data-target="#gm-integration-modal-disabled"class="btn btn-selected"><i class="fa fa-paper-plane"></i> to Pika</button></p>
+    	<hr/>
+    	<p>Example HTML - Launch post search Modal</p>
+		<p><button type="button" data-toggle="modal" data-target="#gm-integration-modal"class="btn btn-selected"><i class="fa fa-paper-plane"></i> to Pika</button></p>
+		<hr/>
+		<p>Example HTML - Launch post search Modal with attachment</p>
+
+		<p><button type="button" data-toggle="modal" data-target="#gm-integration-modal-attachments"class="btn btn-selected"><i class="fa fa-paper-plane"></i> to Pika</button></p>
+		<hr/>
+    	<!-- Modal -->
+		<div class="modal fade" id="gm-integration-modal-disabled" tabindex="-1" role="dialog" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title"><i class="fa fa-paper-plane"></i> to Pika</h4>
+		        <form id="gm-integration-search" class="modal-title-search">
+		            <input type="text" name="search" id="search-input" placeholder="Search for a Case..."/>
+		            <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
+		        </form>
+		      </div>
+		      <div class="modal-body">
+		        <p>Some default content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam id dolor id nibh ultricies vehicula.</p>
+		      </div>
+		      <div class="modal-footer">
+		      	<ul class="list-unstyled text-left">
+	                <li><input type="checkbox" id="send-entire-tread" checked="checked"><label for="sendEntireTread">&nbsp;Copy entire thread message.</label></input></li>
+	            </ul>
+	            <div class="attachments">
+	            	<button class="btn btn-primary" disabled="disabled"><i class="fa fa-paperclip"></i>&nbsp;Add Attachments</button>
+	        	</div>
+            	<button class="btn btn-selected btn-lg" disabled="disabled">Copy to Case Notes</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="modal fade" id="gm-integration-modal" tabindex="-1" role="dialog" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title"><i class="fa fa-paper-plane"></i> to Pika</h4>
+		        <form id="gm-integration-search" class="modal-title-search">
+		            <input type="text" name="search" id="search-input" placeholder="Search for a Case..."/>
+		            <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
+		        </form>
+		      </div>
+		      <div class="modal-body">
+		      	<table id="cases-results" class="table">
+	              <tr>
+	                <th></th>
+	                <th>Client Name <a href="#"><i class="fa fa-sort"></i></a></th>
+	                <th>Case Number <a href="#"><i class="fa fa-sort"></i></a></th>
+	                <th>Open Date <a href="#"><i class="fa fa-sort"></i></a></th>
+	                <th>Advocate <a href="#"><i class="fa fa-sort"></i></a></th>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Smith, John</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Jones, Mary</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Bond, James</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Smith, John</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Jones, Mary</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Bond, James</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	            </table>
+		      	
+		      </div>
+		      <div class="modal-footer">
+		      	<ul class="list-unstyled text-left">
+	                <li><input type="checkbox" id="send-entire-tread" checked="checked"><label for="sendEntireTread">&nbsp;Copy entire thread message.</label></input></li>
+	            </ul>
+	            <div class="attachments">
+	            	<button class="btn btn-primary"><i class="fa fa-paperclip"></i>&nbsp;Add Attachments</button>
+	        	</div>
+            	<button class="btn btn-selected btn-lg">Copy to Case Notes</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="modal fade" id="gm-integration-modal-attachments" tabindex="-1" role="dialog" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title"><i class="fa fa-paper-plane"></i> to Pika</h4>
+		        <form id="gm-integration-search" class="modal-title-search">
+		            <input type="text" name="search" id="search-input" placeholder="Search for a Case..."/>
+		            <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
+		        </form>
+		      </div>
+		      <div class="modal-body">
+		      	<table id="cases-results" class="table">
+	              <tr>
+	                <th></th>
+	                <th>Client Name <a href="#"><i class="fa fa-sort"></i></a></th>
+	                <th>Case Number <a href="#"><i class="fa fa-sort"></i></a></th>
+	                <th>Open Date <a href="#"><i class="fa fa-sort"></i></a></th>
+	                <th>Advocate <a href="#"><i class="fa fa-sort"></i></a></th>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Smith, John</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Jones, Mary</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Bond, James</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Smith, John</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Jones, Mary</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	              <tr>
+	                <td><input type="checkbox"></input></td>
+	                <td>Bond, James</td>
+	                <td>LA-14-00189</td>
+	                <td>10/28/14</td>
+	                <td>Lawlor</td>
+	              </tr>
+	            </table>
+		      	
+		      </div>
+		      <div class="modal-footer">
+		      	<ul class="list-unstyled text-left">
+	                <li><input type="checkbox" id="send-entire-tread" checked="checked"><label for="send-entire-tread">&nbsp;Copy entire thread message.</label></input>
+	                </li>
+	            </ul>
+	            <div class="attachments">
+	            	<ul class="list-group">
+					  <li class="list-group-item">
+					    attachment-one.pdf&nbsp;<span class="pull-right"><i class="fa fa-close"></i></span>
+					  </li>
+					  <li class="list-group-item">
+					    attachment-one.pdf&nbsp;<span class="pull-right"><i class="fa fa-close"></i></span>
+					  </li>
+					  <li class="list-group-item">
+					    attachment-one.pdf&nbsp;<span class="pull-right"><i class="fa fa-close"></i></span>
+					  </li>
+					  <li class="list-group-item">
+					    attachment-one.pdf&nbsp;<span class="pull-right"><i class="fa fa-close"></i></span>
+					  </li>
+					</ul>
+	            </div>
+            	<button class="btn btn-selected btn-lg">Copy to Case Notes</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<script src="scripts/jquery.min.js"></script>
+		<script src="scripts/bootstrap.min.js"></script>
+
+
+    </body>
+</html>

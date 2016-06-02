@@ -1,0 +1,42 @@
+$red:  #ed1c24;
+$white: #fff;
+.modal-header, 
+.modal-body,
+.modal-footer {
+	display: inline-block;
+	width: 100%;
+}
+#search-input {
+	padding: 5px;
+}
+.search-button {
+	border: none;
+	background: none;
+}
+.modal-title,
+.modal-title-search {
+	display: inline-block;
+	margin-right: 10px;
+}
+.modal-header,
+.modal-footer,
+{
+	border: none;
+}
+.modal-body {
+	overflow: auto;
+	height: 200px;
+	width: 100%;
+}
+.btn-selected {
+	background: $red;
+	color: $white;
+}
+.attachments {
+	float: left;
+	width: 60%;
+	padding: 0 10px 10px 10px;
+	height: 50px;
+	text-align: left;
+	overflow: auto;
+}

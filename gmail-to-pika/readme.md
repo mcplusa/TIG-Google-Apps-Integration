@@ -10,7 +10,7 @@
 
 This extension adds a button to your Gmail page that allows to easily attach your received and/or send emails to Pika in a couple of clicks.
 
-**Check out our full documentation on [Our Github Page](http://mcplusa.github.io/gmail-to-pika)**
+**Check out our full documentation on [Our Github Page](http://mcplusa.github.io/TIG-Google-Apps-Integration)**
 
 **Do you like this project? Check out what other projects we have at [MC+A](http://mcplusa.com)**
 
